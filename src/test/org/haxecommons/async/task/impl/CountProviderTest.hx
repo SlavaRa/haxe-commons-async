@@ -2,9 +2,6 @@ package org.haxecommons.async.task.impl;
 import massive.munit.Assert;
 import org.haxecommons.async.task.impl.CountProvider;
 
-/**
- * @author SlavaRa
- */
 class CountProviderTest {
 
 	public function new() {

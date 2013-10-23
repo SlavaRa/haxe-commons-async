@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.haxecommons.async.command.impl;
 import haxe.Log;
 import org.haxecommons.async.command.CompositeCommandKind;
@@ -10,10 +25,18 @@ import org.haxecommons.async.operation.impl.AbstractProgressOperation;
 import org.haxecommons.async.operation.IOperation;
 
 /**
- * @author SlavaRa
+ * Basic implementation of the <code>ICompositeCommand</code> that executes a list of <code>ICommand</code> instances
+ * that were added through the <code>addCommand()</code> method. The commands are executed in the order in which
+ * they were added.
+ * @author Christophe Herreman
+ * @author Roland Zwaga
  */
 class CompositeCommand extends AbstractProgressOperation implements ICompositeCommand {
-
+	
+	/**
+	 * Creates a new <code>CompositeCommand</code> instance.
+	 * @default CompositeCommandKind.SEQUENCE
+	 */
 	public function new(?kind:CompositeCommandKind) {
 		super();
 		
@@ -26,14 +49,39 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		commands = [];
 	}
 	
+	/**
+	 * Determines if the execution of all the <code>ICommands</code> should be aborted if an
+	 * <code>IAsyncCommand</code> instance dispatches an <code>AsyncCommandFaultEvent</code> event.
+	 * @default false
+	 * @see org.haxecommons.async.command.IAsyncCommand IAsyncCommand
+	 */
 	public var failOnFault:Bool;
+	
+	/**
+	 * 
+	 */
 	public var commands(default, default):Array<ICommand>;
+	
+	/**
+	 *
+	 */
 	public var kind(default, default):CompositeCommandKind;
+	
+	/**
+	 * @inheritDoc
+	 */
 	public var numCommands(get, null):Int;
-	public var currentCommand(default, null):ICommand;
 	
 	function get_numCommands() return commands.length;
+	
+	/**
+	 * The <code>ICommand</code> that is currently being executed.
+	 */
+	public var currentCommand(default, null):ICommand;
 
+	/**
+	 * @inheritDoc
+	 */
 	public function execute():Dynamic {
 		if (commands != null) {
 			if(kind == CompositeCommandKind.SEQUENCE) {
@@ -59,6 +107,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		return null;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function addCommand(command:ICommand):ICompositeCommand {
 		#if debug
 		if(command == null) throw "the command argument must not be null.";
@@ -70,6 +121,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		return this;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function addCommandAt(command:ICommand, index:Int):ICompositeCommand {
 		if (index < commands.length) {
 			commands.insert(index, command);
@@ -80,6 +134,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		return addCommand(command);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function addOperation(operationClass:Class<Dynamic>, ?constructorArgs:Array<Dynamic>):ICompositeCommand {
 		#if debug
 		if(operationClass == null) throw "the operationClass argument must not be null.";
@@ -88,10 +145,20 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		return addCommand(GenericOperationCommand.createNew(operationClass, constructorArgs));
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function addOperationAt(operationClass:Class<Dynamic>, index:Int, ?constructorArgs:Array<Dynamic>):ICompositeCommand {
 		return addCommandAt(GenericOperationCommand.createNew(operationClass, constructorArgs), index);
 	}
 
+	/**
+	 * If the specified <code>ICommand</code> implements the <code>IAsyncCommand</code> interface the <code>onCommandResult</code>
+	 * and <code>onCommandFault</code> event handlers are added. Before the <code>ICommand.execute()</code> method is invoked
+	 * the <code>CompositeCommandEvent.EXECUTE_COMMAND</code> event is dispatched.
+	 * <p>When the <code>command</code> argument is <code>null</code> the <code>CompositeCommandEvent.COMPLETE</code> event is dispatched instead.</p>
+	 * @see org.haxecommons.async.command.event.CommandEvent CompositeCommandEvent
+	 */
 	function executeCommand(command:ICommand) {
 		#if debug
 		if(command == null) throw "the command argument must not be null.";
@@ -127,6 +194,10 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		}
 	}
 
+	/**
+	 * Retrieves and removes the next <code>ICommand</code> from the internal list and passes it to the
+	 * <code>executeCommand()</code> method.
+	 */
 	function executeNextCommand() {
 		var command = commands.shift();
 		
@@ -146,7 +217,7 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 			dispatchCompleteEvent();
 		}
 	}
-
+	
 	function removeCommand(asyncCommand:IOperation) {
 		#if debug
 		if(asyncCommand == null) throw "the asyncCommand argument must not be null";
@@ -166,17 +237,17 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	function executeCommandsInParallel() {
 		var containsOperations = false;
 		
-		for (cmd in commands) {
-			if (Std.is(cmd, IOperation)) {
+		for (command in commands) {
+			if (Std.is(command, IOperation)) {
 				containsOperations = true;
-				addCommandListeners(cast(cmd, IOperation));
+				addCommandListeners(cast(command, IOperation));
 			}
 			
-			dispatchBeforeCommandEvent(cmd);
-			cmd.execute();
+			dispatchBeforeCommandEvent(command);
+			command.execute();
 			
-			if (!Std.is(cmd, IOperation)) {
-				dispatchAfterCommandEvent(cmd);
+			if (!Std.is(command, IOperation)) {
+				dispatchAfterCommandEvent(command);
 			}
 		}
 		
@@ -185,6 +256,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		}
 	}
 
+	/**
+	 * Adds the <code>onCommandResult</code> and <code>onCommandFault</code> event handlers to the specified <code>IAsyncCommand</code> instance.
+	 */
 	function addCommandListeners(?asyncCommand:IOperation) {
 		if (asyncCommand == null) {
 			return;
@@ -193,7 +267,10 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		asyncCommand.addCompleteListener(onCommandResult);
 		asyncCommand.addErrorListener(onCommandFault);
 	}
-
+	
+	/**
+     * Removes the <code>onCommandResult</code> and <code>onCommandFault</code> event handlers from the specified <code>IAsyncCommand</code> instance.
+     */
 	function removeCommandListeners(?asyncCommand:IOperation) {
 		if (asyncCommand == null) {
 			return;

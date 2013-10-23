@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.haxecommons.async.task.command;
 import haxe.Log;
 import org.haxecommons.async.command.CompositeCommandKind;
@@ -10,10 +25,13 @@ import org.haxecommons.async.task.ITask;
 import org.haxecommons.async.task.ITaskFlowControl;
 
 /**
- * @author SlavaRa
+ * @author Roland Zwaga
  */
 class TaskCommand extends CompositeCommand implements IResetable {
-
+	
+	/**
+	 * Creates a new <code>TaskCommand</code> instance.
+	 */
 	public function new(?kind:CompositeCommandKind) super(kind);
 	
 	var _stopped:Bool = false;
@@ -62,7 +80,10 @@ class TaskCommand extends CompositeCommand implements IResetable {
 			dispatchCompleteEvent();
 		}
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	override function addCommandListeners(?asyncCommand:IOperation) {
 		if (Std.is(asyncCommand, ITaskFlowControl)) {
 			asyncCommand.addEventListener(TaskFlowControlEvent.BREAK, onFlowControlHandler);
@@ -72,7 +93,10 @@ class TaskCommand extends CompositeCommand implements IResetable {
 		
 		super.addCommandListeners(asyncCommand);
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	override function removeCommandListeners(?asyncCommand:IOperation) {
 		if (Std.is(asyncCommand, ITaskFlowControl)) {
 			asyncCommand.removeEventListener(TaskFlowControlEvent.BREAK, onFlowControlHandler);

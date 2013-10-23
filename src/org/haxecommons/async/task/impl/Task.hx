@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.haxecommons.async.task.impl;
 import org.haxecommons.async.command.CompositeCommandKind;
 import org.haxecommons.async.command.event.CompositeCommandEvent;
@@ -24,25 +39,62 @@ import org.haxecommons.async.task.IWhileBlock;
 import org.haxecommons.async.task.TaskFlowControlKind;
 
 /**
- * @author SlavaRa
+ * @inheritDoc
  */
 class Task extends AbstractOperation implements ITask/* implements IDisposable*/ {
-
+	
+	/**
+	 * Creates a new <code>Task</code> instance.
+	 */
 	public function new() {
 		super();
 		initTask();
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public var isDisposed(default, null):Bool;
+	
+	/**
+	 * @inheritDoc
+	 */
 	public var isClosed(default, null):Bool;
-	public var parent(default, default) :ITask;
+	
+	/**
+	 * An optional <code>ITask</code> instance whose controlflow the current <code>ITask</code> is part of.
+	 */
+	public var parent(default, default):ITask;
+	
+	/**
+	 * @inheritDoc
+	 */
 	public var context(default, default):Dynamic;
+	
+	/**
+	 * Determines if the entire controlflow of the current <code>ITask</code> will be aborted if an error occurs.
+	 * @deault true
+	 */
 	public var failOnFault:Bool = true;
-
+	
+	/**
+	 * Internal <code>Array</code> of the commands, tasks and controlflow objects that will be executed.
+	 */
 	var commandList:Array<ICommand>;
+	
+	/**
+	 * Internal <code>Array</code> of the commands, tasks and controlflow objects that have been executed.
+	 */
 	var finishedCommandList:Array<ICommand>;
+	
+	/**
+	 * The current <code>ICommand</code> instance that is being executed.
+	 */
 	var currentCommand:ICommand;
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function next(item:Dynamic, ?constructorArgs:Array<Dynamic>):ITask {
 		#if debug
 		if(item == null) throw "the item argument must not be null";
@@ -53,7 +105,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		
 		return result != null ? result : this;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function and(item:Dynamic, ?constructorArgs:Array<Dynamic>):ITask {
 		#if debug
 		if(item == null) throw "the item argument must not be null";
@@ -63,7 +118,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		var result = addCommand(command, CompositeCommandKind.PARALLEL);
 		return result != null ? result : this;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function if_(?conditionProvider:IConditionProvider, ?ifElseBlock:IIfElseBlock):IIfElseBlock {
 		ifElseBlock = (ifElseBlock != null) ? ifElseBlock : new IfElseBlock(conditionProvider);
 		
@@ -76,7 +134,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		
 		return ifElseBlock;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function else_():IIfElseBlock {
 		var result:IIfElseBlock = null;
 		if (commandList.length > 0) {
@@ -88,7 +149,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		}
 		return result;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function while_(?conditionProvider:IConditionProvider, ?whileBlock:IWhileBlock):IWhileBlock {
 		whileBlock = whileBlock != null ? whileBlock : new WhileBlock(conditionProvider);
 		
@@ -100,7 +164,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		}
 		return whileBlock;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function for_(count:Int, ?countProvider:ICountProvider, ?forBlock:IForBlock):IForBlock {
 		countProvider = ((countProvider == null) && (forBlock == null)) ? new CountProvider(count) : countProvider;
 		forBlock = (forBlock != null) ? forBlock : new ForBlock(countProvider);
@@ -114,7 +181,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		
 		return forBlock;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function end():ITask {
 		if (commandList.length > 0) {
 			var command:ICommand = commandList[commandList.length - 1];
@@ -127,25 +197,37 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		}
 		return parent != null ? parent : this;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function exit():ITask {
 		var result = addCommand(new TaskFlowControlCommand(TaskFlowControlKind.EXIT), CompositeCommandKind.SEQUENCE);
 		return result != null ? result : this;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function pause(duration:Int, ?pauseCommand:ICommand):ITask {
 		pauseCommand = pauseCommand == null ? new PauseCommand(duration) : pauseCommand;
 		
 		var result = addCommand(pauseCommand, CompositeCommandKind.SEQUENCE);
 		return result != null ? result : this;
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function execute():Dynamic {
 		finishedCommandList = [];
 		executeNextCommand();
 		return null;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function reset(?doHardReset:Bool):ITask {
 		if (doHardReset) {
 			resetCommandList();
@@ -156,6 +238,9 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		return this;
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function dispose() {
 		if (!isDisposed) {
 			commandList = null;
@@ -165,16 +250,27 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 			isDisposed = true;
 		}
 	}
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public function break_():ITask return this;
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function continue_():ITask return this;
 	
 	function initTask() {
 		commandList = [];
 		context = {};
 	}
-
+	
+	/**
+	 * Adds the specified <code>ICommand</code> instance to the control flow of the current <code>ITask</code>, if the specified
+	 * <code>ICommand</code> is also an implementation of <code>ITask</code>, the current <code>ITask</code> will be set as its parent.
+	 * @param command The specified <code>ICommand</code> instance.
+	 */
 	function addToCommandList(command:ICommand) {
 		commandList[commandList.length] = command;
 		currentCommand = command;
@@ -184,12 +280,24 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		}
 	}
 	
+	/**
+	 * Adds a new <code>TaskCommand</code> with the specified <code>ComposeiteCommandKind</code> to the controlflow of the current <code>ITask</code>.
+	 * @param kind The specified <code>ComposeiteCommandKind</code>
+	 * @return The newly created <code>TaskCommand</code>
+	 */
 	function addTaskCommand(kind:CompositeCommandKind):CompositeCommand {
 		var taskCommand = new TaskCommand(kind);
 		addToCommandList(taskCommand);
 		return taskCommand;
 	}
-
+	
+	/**
+	 * Examines the current <code>ICommand</code> in the controlflow and based on that either adds the specified <code>ICommand</code>
+	 * to the current <code>ICommand</code> or creates a new <code>TaskCommand</code> and adds it to this.
+	 * @param command The specified <code>ICommand</code>.
+	 * @param kind
+	 * @return The current <code>ICommand</code> if it is an <code>ITaskBlock</code>, otherwise null.
+	 */
 	function addCommand(command:ICommand, kind:CompositeCommandKind):ITask {
 		var compositeCommand:ICompositeCommand = null;
 		

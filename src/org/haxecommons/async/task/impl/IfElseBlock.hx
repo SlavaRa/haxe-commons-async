@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007-2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.haxecommons.async.task.impl;
 import flash.events.Event;
 import org.haxecommons.async.command.ICommand;
@@ -15,10 +30,14 @@ import org.haxecommons.async.task.ITask;
 import org.haxecommons.async.task.IWhileBlock;
 
 /**
- * @author SlavaRa
+ * @inheritDoc
  */
 class IfElseBlock extends AbstractOperation implements IIfElseBlock {
-
+	
+	/**
+	 * Creates a new <code>IfElseBlock</code> instance.
+	 * @param conditionProvider An <code>IConditionProvider</code> instance that determines which block will be executed.
+	 */
 	public function new(conditionProvider:IConditionProvider) {
 		#if debug
 		if(conditionProvider == null) throw "the conditionProvider argument must not be null";
@@ -34,7 +53,10 @@ class IfElseBlock extends AbstractOperation implements IIfElseBlock {
 	private var _ifBlock:ITask;
 	private var _elseBlock:ITask;
 	private var _currentBlock:ITask;
-
+	
+	/**
+	 * @inheritDoc
+	 */
 	public var context:Dynamic;
 	public var parent(default, set):ITask;
 
@@ -45,6 +67,10 @@ class IfElseBlock extends AbstractOperation implements IIfElseBlock {
 	}
 
 	public var conditionProvider(default, default):IConditionProvider;
+	
+	/**
+	 * @inheritDoc
+	 */
 	public var isClosed(default, null):Bool;
 
 	public function switchToElseBlock() {
