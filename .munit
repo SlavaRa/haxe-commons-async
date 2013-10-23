@@ -1,0 +1,10 @@
+version=2.1.0
+src=src/test
+bin=bin/test
+report=report
+hxml=test.hxml
+classPaths=src
+resources=null
+templates=null
+coveragePackages=null
+coverageIgnoredClasses=null
