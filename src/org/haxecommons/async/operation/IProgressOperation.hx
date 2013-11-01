@@ -24,17 +24,13 @@ interface IProgressOperation extends IOperation {
 	
 	/**
 	 * The progress of this operation.
-	 *
-	 * @return the progress of this operation
 	 */
-	var progress(default, null):UInt;
+	var progress(default, null):Int;
 	
 	/**
 	 * The total amount of progress this operation should make before being done.
-	 *
-	 * @return the total amount of progress this operation should make before being done
 	 */
-	var total(default, null):UInt;
+	var total(default, null):Int;
 	
 	/**
 	 * Convenience method for adding a listener to the OperationEvent.PROGRESS event.

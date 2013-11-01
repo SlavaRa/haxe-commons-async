@@ -78,11 +78,12 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 		var timer = haxe.Timer.delay(handler, 3900);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
-		var counter = 0;
+		var counter:Int = 0;
 		var command1:Void->Void = function() {
 			Assert.areEqual(0, counter);
 			counter++;
 		}
+		
 		var command2:Void->Void = function() Assert.areEqual(1, counter);
 		cc.addOperation(MockOperation, ["test1", 2000, true, command1, false]).addOperation(MockOperation, ["test2", 1000, false, command2, false]);
 		cc.failOnFault = false;

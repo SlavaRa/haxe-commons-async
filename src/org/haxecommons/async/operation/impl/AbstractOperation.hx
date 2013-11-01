@@ -64,7 +64,6 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	var _autoStartTimeout:Bool = true;
 	var _timedOut:Bool = false;
 	var _timer:Timer;
-	var _timeoutId:UInt;
 	
 	/**
 	 * @inheritDoc

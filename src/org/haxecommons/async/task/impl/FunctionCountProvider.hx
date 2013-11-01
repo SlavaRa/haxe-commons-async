@@ -18,15 +18,15 @@ package org.haxecommons.async.task.impl;
 /**
  * <code>ICountProvider</code> implementation that takes a <code>Function</code> as
  * a constructor argument and will invoke this <code>Function</code> in its <code>getCount()</code> method.
- * <p>The signature of this <code>Function</code> should be <code>Function():uint;</code></p>
+ * <p>The signature of this <code>Function</code> should be <code>Function():Int;</code></p>
  * @author Roland Zwaga
  */
 class FunctionCountProvider extends CountProvider {
 	
 	/**
 	 * Creates a new <code>FunctionCountProvider</code> instance.
-	 * @param func A <code>Function</code> that returns a <code>uint</code> representing the specified count.
-	 * The signature of this <code>Function</code> should be <code>Function():uint;</code>
+	 * @param func A <code>Function</code> that returns a <code>Int</code> representing the specified count.
+	 * The signature of this <code>Function</code> should be <code>Function():Int;</code>
 	 */
 	public function new(func:Void -> Int) {
 		#if debug

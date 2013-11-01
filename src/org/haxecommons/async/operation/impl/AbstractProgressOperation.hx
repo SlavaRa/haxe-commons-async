@@ -26,7 +26,7 @@ class AbstractProgressOperation extends AbstractOperation implements IProgressOp
 	/**
 	 * Creates a new <code>AbstractProgressOperation</code> instance.
 	 */
-	public function new(timeoutInMilliseconds:UInt = 0, autoStartTimeout:Bool = true) {
+	public function new(timeoutInMilliseconds:Int = 0, autoStartTimeout:Bool = true) {
 		super(timeoutInMilliseconds, autoStartTimeout);
 	}
 	
@@ -34,13 +34,13 @@ class AbstractProgressOperation extends AbstractOperation implements IProgressOp
 	 * Sets the progress of this operation.
 	 * @param value the progress of this operation
 	 */
-	public var progress(default, default):UInt;
+	public var progress(default, default):Int;
 	
 	/**
 	 * Sets the total amount of progress this operation should make before being done.
 	 * @param value the total amount of progress this operation should make before being done
 	 */
-	public var total(default, default):UInt;
+	public var total(default, default):Int;
 	
 	/**
 	 * @inheritDoc

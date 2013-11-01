@@ -14,8 +14,11 @@
 -main TestMain
 -lib munit
 -lib hamcrest
--cp src
+-lib openfl
+-lib openfl-html5
+--remap flash:flash
 
+-cp src
 -cp src/test
 -js bin/test/js_test.js
 
@@ -25,19 +28,22 @@
 -main TestMain
 -lib munit
 -lib hamcrest
--cp src
+-lib openfl
+-lib openfl-native
+--remap flash:flash
 
+-cp src
 -cp src/test
 -neko bin/test/neko_test.n
 
 --next
 
 ## CPP
--main TestMain
--lib munit
--lib hamcrest
--cp src
-
--cp src/test
-#-D HXCPP_M64
--cpp bin/test/cpp_test
+#-main TestMain
+#-lib munit
+#-lib hamcrest
+#-cp src
+#
+#-cp src/test
+##-D HXCPP_M64
+#-cpp bin/test/cpp_test

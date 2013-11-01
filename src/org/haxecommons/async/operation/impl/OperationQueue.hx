@@ -31,7 +31,7 @@ class OperationQueue extends AbstractProgressOperation implements IOperationQueu
 	/**
 	 * A static counter of queues.
 	 */
-	static var _queueCounter:UInt = 0;
+	static var _queueCounter:Int = 0;
 	
 	/**
 	 * Creates a new <code>OperationQueue</code> instance.
