@@ -200,3 +200,4 @@ bin/flash/haxe/DefaultAssetLibrary.hx
 bin/test/js_test.js
 report/test-runner/js.html
 report/test-runner/js_test.js
+report/test/summary/js/summary.txt

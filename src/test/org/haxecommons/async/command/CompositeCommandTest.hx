@@ -19,39 +19,40 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 		var c = new MockAsyncCommand();
         var o = new MockOperation(null);
 		var cc = new CompositeCommand();
-		Assert.areEqual(0, cc.numCommands);
+		Assert.areEqual(cc.numCommands, 0);
 		cc.addCommand(c);
-		Assert.areEqual(1, cc.numCommands);
+		Assert.areEqual(cc.numCommands, 1);
 		cc.addOperation(Type.getClass(o));
-		Assert.areEqual(2, cc.numCommands);
+		Assert.areEqual(cc.numCommands, 2);
 	}
 	
 	@AsyncTest
 	public function testSequenceExecute(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 4000);
-		var timer = haxe.Timer.delay(handler, 3900);
+		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
+		haxe.Timer.delay(handler, 3500);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
 		var counter = 0;
 		var command1:Void->Void = function() {
-			Assert.areEqual(0, counter);
+			Assert.areEqual(counter, 0);
 			counter++;
 		}
-		var command2:Void->Void = function() Assert.areEqual(1, counter);
-		cc.addOperation(MockOperation, ["test1", 2000, false, command1]).addOperation(MockOperation, ["test2", 1000, false, command2]);
+		var command2:Void->Void = asyncFactory.createHandler(this, function() Assert.areEqual(counter, 1), 4000);
+		
+		cc.addOperation(MockOperation, ["test1", 1000, false, command1]).addOperation(MockOperation, ["test2", 2000, false, command2]);
 		cc.execute();
 	}
 	
 	@AsyncTest
 	public function testParallelExecute(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 6000);
-		var timer = haxe.Timer.delay(handler, 5900);
+		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 6000);
+		haxe.Timer.delay(handler, 5500);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.PARALLEL);
 		var counter = 0;
-		var command1:Void->Void = function() Assert.areEqual(1, counter);
+		var command1:Void->Void = function() Assert.areEqual(counter, 1);
 		var command2:Void->Void = function() {
-			Assert.areEqual(0, counter);
+			Assert.areEqual(counter, 0);
 			counter++;
 		}
 		cc.addOperation(MockOperation, ["test1", 4000, false, command1, false]).addOperation(MockOperation, ["test2", 1000, false, command2, false]);
@@ -59,9 +60,9 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	}
 	
 	@AsyncTest
-	public function testFailOnfaultIsTrue(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 4000);
-		var timer = haxe.Timer.delay(handler, 3900);
+	public function testFailOnFaultIsTrue(asyncFactory:AsyncFactory) {
+		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
+		haxe.Timer.delay(handler, 3500);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
 		var counter = 0;
@@ -73,20 +74,23 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	}
 	
 	@AsyncTest
-	public function testFailOnfaultIsFalse(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 4000);
-		var timer = haxe.Timer.delay(handler, 3900);
+	public function testFailOnFaultIsFalse(asyncFactory:AsyncFactory) {
+		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
+		haxe.Timer.delay(handler, 3900);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
-		var counter:Int = 0;
+		var counter = 0;
 		var command1:Void->Void = function() {
-			Assert.areEqual(0, counter);
+			Assert.areEqual(counter, 0);
 			counter++;
 		}
 		
-		var command2:Void->Void = function() Assert.areEqual(1, counter);
+		var command2:Void->Void = function() {
+			Assert.areEqual(counter, 1);
+		}
 		cc.addOperation(MockOperation, ["test1", 2000, true, command1, false]).addOperation(MockOperation, ["test2", 1000, false, command2, false]);
 		cc.failOnFault = false;
 		cc.execute();
 	}
+	
 }

@@ -24,11 +24,6 @@ class MockOperation extends AbstractOperation {
 	
 	/**
 	 * Creates a new <code>MockOperation</code> instance.
-	 * @param resultData
-	 * @param delay
-	 * @param returnError
-	 * @param func
-	 * @param useRandomDelay
 	 */
 	public function new(resultData:Dynamic, delay:Int = 1000, ?returnError:Bool, ?func:Void -> Void, useRandomDelay:Bool = true) {
 		super();
@@ -45,23 +40,24 @@ class MockOperation extends AbstractOperation {
 		_func = func;
 		
 		if (returnError) {
-			Timer.delay(function() {
-					error = "error occurred";
-					if (_func != null) {
-						_func();
-					}
-					dispatchErrorEvent();
+			var timer = haxe.Timer.delay(function() {
+				error = "error occurred";
+				if (_func != null) {
+					_func();
+				}
+				dispatchErrorEvent();
 			}, _delay);
+			timer.run();
 		} else {
-			var foo:Dynamic->Void = function(data:Dynamic) {
-				result = data;
+			var timer = haxe.Timer.delay(function() {
+				result = _result;
 				if (_func != null) {
 					_func();
 				}
 				dispatchCompleteEvent();
-			}
-			
-			Timer.delay(function() foo(_result), _delay);
+			}, _delay);
+			timer.run();
 		}
+		
 	}
 }
