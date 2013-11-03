@@ -28,6 +28,8 @@ class AbstractProgressOperation extends AbstractOperation implements IProgressOp
 	 */
 	public function new(timeoutInMilliseconds:Int = 0, autoStartTimeout:Bool = true) {
 		super(timeoutInMilliseconds, autoStartTimeout);
+		progress = 0;
+		total = 0;
 	}
 	
 	/**
