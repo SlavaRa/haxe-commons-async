@@ -54,7 +54,7 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 			Assert.areEqual(0, counter);
 			counter++;
 		}
-		cc.addOperation(MockOperation, ["test1", 5000, false, command1, false]).addOperation(MockOperation, ["test2", 1000, false, command2, false]);
+		cc.addOperation(MockOperation, ["test1", 4000, false, command1, false]).addOperation(MockOperation, ["test2", 1000, false, command2, false]);
 		cc.execute();
 	}
 	

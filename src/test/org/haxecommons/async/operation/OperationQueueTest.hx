@@ -26,15 +26,6 @@ class OperationQueueTest extends AbstractTestWithMockRepository {
 		var o1 = Type.createEmptyInstance(AbstractOperation);
 		var o2 = Type.createEmptyInstance(AbstractOperation);
 		
-		//var o1:AbstractOperation = AbstractOperation(mockRepository.createDynamic(AbstractOperation));
-		//var o2:AbstractOperation = AbstractOperation(mockRepository.createDynamic(AbstractOperation));
-		
-		//mockRepository.stubEvents(o1);
-		//mockRepository.stubAllProperties(o1);
-		//mockRepository.stubEvents(o2);
-		//mockRepository.stubAllProperties(o2);
-		//mockRepository.replayAll();
-		
 		_queue.addOperation(o1);
 		_queue.addOperation(o2);
 		
