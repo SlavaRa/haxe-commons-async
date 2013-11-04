@@ -25,7 +25,7 @@ class FunctionProxyCommand implements ICommand {
 	/**
 	 * Creates a new <code>FunctionProxyCommand</code> instance.
 	 */
-	public function new(?target:Dynamic, ?methodName:String = "", ?args:Array<Dynamic>) {
+	public function new(?target:Dynamic, ?methodName:String, ?args:Array<Dynamic>) {
 		init(target, methodName, args);
 	}
 	
@@ -65,10 +65,10 @@ class MethodInvoker {
 	public var args:Array<Dynamic>;
 
 	public function invoke():Dynamic {
-		if(Reflect.hasField(target, method)) {
-			return Reflect.callMethod(target, Reflect.getProperty(target, method), args);
+		if(target == null || method == null || method.length == 0) {
+			return null;
 		}
 		
-		return null;
+		return Reflect.callMethod(target, Reflect.getProperty(target, method), args);
 	}
 }

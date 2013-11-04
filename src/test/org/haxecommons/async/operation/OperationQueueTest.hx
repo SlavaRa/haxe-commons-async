@@ -23,8 +23,8 @@ class OperationQueueTest extends AbstractTestWithMockRepository {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 1000);
 		var timer = haxe.Timer.delay(handler, 900);
 		
-		var o1 = Type.createEmptyInstance(AbstractOperation);
-		var o2 = Type.createEmptyInstance(AbstractOperation);
+		var o1 = Type.createInstance(AbstractOperation, []);
+		var o2 = Type.createInstance(AbstractOperation, []);
 		
 		_queue.addOperation(o1);
 		_queue.addOperation(o2);

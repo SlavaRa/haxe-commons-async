@@ -37,7 +37,7 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 			Assert.areEqual(counter, 0);
 			counter++;
 		}
-		var command2:Void->Void = asyncFactory.createHandler(this, function() Assert.areEqual(counter, 1), 4000);
+		var command2:Void->Void = function() Assert.areEqual(counter, 1);
 		
 		cc.addOperation(MockOperation, ["test1", 1000, false, command1]).addOperation(MockOperation, ["test2", 2000, false, command2]);
 		cc.execute();

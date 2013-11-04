@@ -47,7 +47,6 @@ class MockOperation extends AbstractOperation {
 				}
 				dispatchErrorEvent();
 			}, _delay);
-			timer.run();
 		} else {
 			var timer = haxe.Timer.delay(function() {
 				result = _result;
@@ -56,7 +55,6 @@ class MockOperation extends AbstractOperation {
 				}
 				dispatchCompleteEvent();
 			}, _delay);
-			timer.run();
 		}
 		
 	}
