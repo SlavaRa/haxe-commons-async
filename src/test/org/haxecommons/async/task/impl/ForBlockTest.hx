@@ -36,9 +36,9 @@ class ForBlockTest extends AbstractTestWithMockRepository {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
 		var timer = haxe.Timer.delay(handler, 1900);
 		
-		var count = new CountProvider();
+		var count = new CountProvider(10);
 		var command1:Void->Void = function() _counter++;
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(10, _counter);
+		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(_counter, 10);
 		
 		var fb:ForBlock = new ForBlock(count);
 		fb.next(MockOperation, ["test1", 100, false, command1]).end();

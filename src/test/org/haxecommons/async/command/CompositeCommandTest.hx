@@ -29,7 +29,7 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testSequenceExecute(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
-		haxe.Timer.delay(handler, 3500);
+		haxe.Timer.delay(handler, 3900);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
 		var counter = 0;
@@ -46,7 +46,7 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testParallelExecute(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 6000);
-		haxe.Timer.delay(handler, 5500);
+		haxe.Timer.delay(handler, 5900);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.PARALLEL);
 		var counter = 0;
@@ -62,10 +62,9 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testFailOnFaultIsTrue(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
-		haxe.Timer.delay(handler, 3500);
+		haxe.Timer.delay(handler, 3900);
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
-		var counter = 0;
 		var command1:Void->Void = function() Assert.isTrue(true);
 		var command2:Void->Void = function() Assert.isTrue(false);
 		cc.addOperation(MockOperation, ["test1", 2000, true, command1, false]).addOperation(MockOperation, ["test2", 1000, false, command2, false]);
