@@ -1,4 +1,5 @@
 package org.haxecommons.async.operation;
+import haxe.Log;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 import org.haxecommons.async.operation.event.OperationEvent;
@@ -21,7 +22,11 @@ class OperationQueueTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testQueue(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 1000);
-		var timer = haxe.Timer.delay(handler, 900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 900).run();
+		#else
+		haxe.Timer.delay(handler, 900);
+		#end
 		
 		var o1 = Type.createInstance(AbstractOperation, []);
 		var o2 = Type.createInstance(AbstractOperation, []);

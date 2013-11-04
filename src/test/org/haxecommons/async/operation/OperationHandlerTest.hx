@@ -22,7 +22,11 @@ class OperationHandlerTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testHandleOperationWithResultMethod(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 1000);
-		var timer = haxe.Timer.delay(handler, 900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 900).run();
+		#else
+		haxe.Timer.delay(handler, 900);
+		#end
 		
 		var o = new AbstractOperation();
 		var result:Dynamic = {};
@@ -35,7 +39,11 @@ class OperationHandlerTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testHandleOperationWithObjectProperty(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 1000);
-		var timer = haxe.Timer.delay(handler, 900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 900).run();
+		#else
+		haxe.Timer.delay(handler, 900);
+		#end
 		
 		var o = new AbstractOperation();
 		var resultObject:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -50,7 +58,11 @@ class OperationHandlerTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testHandleOperationWithObjectPropertyAndResultMethod(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 1000);
-		var timer = haxe.Timer.delay(handler, 900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 900).run();
+		#else
+		haxe.Timer.delay(handler, 900);
+		#end
 		
 		var o = new AbstractOperation();
 		var resultObject:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -70,7 +82,11 @@ class OperationHandlerTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testHandleOperationWithNothing(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 1000);
-		var timer = haxe.Timer.delay(handler, 900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 900).run();
+		#else
+		haxe.Timer.delay(handler, 900);
+		#end
 		
 		var o = new AbstractOperation();
 		_operationHandler.handleOperation(o);

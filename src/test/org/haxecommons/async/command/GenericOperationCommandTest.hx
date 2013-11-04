@@ -27,7 +27,11 @@ class GenericOperationCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testExecute(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		var timer = haxe.Timer.delay(handler, 1900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 1900).run();
+		#else
+		haxe.Timer.delay(handler, 1900);
+		#end
 		
 		var result = [];
 		var completeListener:OperationEvent->Void = function(event:OperationEvent) Assert.areNotEqual(event.result, result);

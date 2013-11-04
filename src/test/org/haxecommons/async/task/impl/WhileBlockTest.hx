@@ -1,7 +1,6 @@
 package org.haxecommons.async.task.impl;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
-import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.command.impl.MockAsyncCommand;
 import org.haxecommons.async.operation.impl.MockOperation;
 import org.haxecommons.async.task.event.TaskEvent;
@@ -33,7 +32,11 @@ class WhileBlockTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testExecuteWithAsync(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		var timer = haxe.Timer.delay(handler, 1900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 1900).run();
+		#else
+		haxe.Timer.delay(handler, 1900);
+		#end 
 		
 		var command1:Void->Void = function() Assert.isTrue(_counter < 11);
 		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(11, _counter);

@@ -178,7 +178,6 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		} else {
 			addCommand(forBlock, CompositeCommandKind.SEQUENCE);
 		}
-		
 		return forBlock;
 	}
 	
@@ -334,6 +333,19 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		return null;
 	}
 
+	function executeNextCommand() {
+		var command:ICommand = null;
+		if(commandList != null && commandList.length > 0) {
+			command = commandList.shift();
+		}
+		
+		if (command != null) {
+			finishedCommandList[finishedCommandList.length] = command;
+		}
+		
+		executeCommand(command);
+	}
+	
 	function executeCommand(command:ICommand) {
 		currentCommand = command;
 		
@@ -352,15 +364,6 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		} else {
 			completeExecution();
 		}
-	}
-
-	function executeNextCommand() {
-		var command = commandList.shift();
-		if (command != null) {
-			finishedCommandList[finishedCommandList.length] = command;
-		}
-		
-		executeCommand(command);
 	}
 
 	function completeExecution() {

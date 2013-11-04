@@ -16,7 +16,11 @@ class PauseCommandTest {
 	@AsyncTest
 	public function testExecute(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		var timer = haxe.Timer.delay(handler, 1900);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 1900).run();
+		#else
+		haxe.Timer.delay(handler, 1900);
+		#end
 		
 		var pc = new PauseCommand(500);
 		var handleError:Void->Void = function() Assert.isTrue(false);

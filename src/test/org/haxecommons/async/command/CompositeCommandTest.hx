@@ -29,7 +29,11 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testSequenceExecute(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 3900).run();
+		#else
 		haxe.Timer.delay(handler, 3900);
+		#end
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
 		var counter = 0;
@@ -46,7 +50,11 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testParallelExecute(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 6000);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 5900).run();
+		#else
 		haxe.Timer.delay(handler, 5900);
+		#end
 		
 		var cc = new CompositeCommand(CompositeCommandKind.PARALLEL);
 		var counter = 0;
@@ -62,7 +70,11 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testFailOnFaultIsTrue(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 3900).run();
+		#else
 		haxe.Timer.delay(handler, 3900);
+		#end
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
 		var command1:Void->Void = function() Assert.isTrue(true);
@@ -75,7 +87,11 @@ class CompositeCommandTest extends AbstractTestWithMockRepository {
 	@AsyncTest
 	public function testFailOnFaultIsFalse(asyncFactory:AsyncFactory) {
 		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isNull(null), 4000);
+		#if (neko && !display)
+		haxe.Timer.delay(handler, 3900).run();
+		#else
 		haxe.Timer.delay(handler, 3900);
+		#end
 		
 		var cc = new CompositeCommand(CompositeCommandKind.SEQUENCE);
 		var counter = 0;
