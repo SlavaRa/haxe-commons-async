@@ -1,13 +1,10 @@
 package org.haxecommons.async.task.impl;
-import haxe.Log;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
-import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.command.impl.MockAsyncCommand;
 import org.haxecommons.async.operation.impl.MockOperation;
 import org.haxecommons.async.task.event.TaskEvent;
 import org.haxecommons.async.task.IConditionProvider;
-import org.haxecommons.async.task.ICountProvider;
 import org.haxecommons.async.task.impl.FunctionConditionProvider;
 import org.haxecommons.async.task.impl.Task;
 import org.haxecommons.async.test.AbstractTestWithMockRepository;
@@ -31,10 +28,8 @@ class TaskTest extends AbstractTestWithMockRepository {
 
 	@Test
 	public function testAnd() {
-		var c = new MockAsyncCommand();
-		
 		var task = new Task();
-		task.and(c);
+		task.and(new MockAsyncCommand());
 		task.execute();
 	}
 
@@ -46,7 +41,6 @@ class TaskTest extends AbstractTestWithMockRepository {
 		#else
 		haxe.Timer.delay(handler, 400);
 		#end
-		
 		var task = new Task();
 		task.and(new MockAsyncCommand(false, 1, incCounter));
 		task.addEventListener(TaskEvent.TASK_COMPLETE, onTaskComplete);
@@ -61,7 +55,6 @@ class TaskTest extends AbstractTestWithMockRepository {
 		#else
 		haxe.Timer.delay(handler, 5900);
 		#end
-		
 		var counter:Int = 0;
 		var command1:Void->Void = function() Assert.areEqual(1, counter);
 		var command2:Void->Void = function() {
@@ -80,7 +73,6 @@ class TaskTest extends AbstractTestWithMockRepository {
 	@Test
 	public function testAndAsyncNotAsyncMixed() {
 		var c = new MockAsyncCommand();
-		
 		var task = new Task();
 		task.and(new MockAsyncCommand(false, 1, incCounter)).and(c);
 		task.addEventListener(TaskEvent.TASK_COMPLETE, onTaskComplete);
@@ -90,7 +82,6 @@ class TaskTest extends AbstractTestWithMockRepository {
 	@Test
 	public function testNext() {
 		var c = new MockAsyncCommand();
-		
 		var task = new Task();
 		task.next(c);
 		task.execute();
@@ -104,7 +95,6 @@ class TaskTest extends AbstractTestWithMockRepository {
 		#else
 		haxe.Timer.delay(handler, 400);
 		#end
-		
 		var task = new Task();
 		task.next(new MockAsyncCommand(false, 1, incCounter));
 		task.addEventListener(TaskEvent.TASK_COMPLETE, onTaskComplete);
@@ -119,7 +109,6 @@ class TaskTest extends AbstractTestWithMockRepository {
 		#else
 		haxe.Timer.delay(handler, 5900);
 		#end
-		
 		var counter:Int = 0;
 		var command1:Void->Void = function() {
 			Assert.areEqual(0, counter);
@@ -137,9 +126,7 @@ class TaskTest extends AbstractTestWithMockRepository {
 	public function testForLoopWithCountProvider() {
 		var count = new CountProvider();
 		var command = new MockAsyncCommand();
-		
 		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.isTrue(true);
-		
 		var task = new Task();
 		task.for_(0, count).and(command).end();
 		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
@@ -149,7 +136,6 @@ class TaskTest extends AbstractTestWithMockRepository {
 	@Test
 	public function testForLoopWithFixedCount() {
 		var command = new MockAsyncCommand();
-		
 		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.isTrue(true);
 		var task:Task = new Task();
 		task.for_(10).and(command).end();
@@ -165,25 +151,21 @@ class TaskTest extends AbstractTestWithMockRepository {
 		#else
 		haxe.Timer.delay(handler, 1900);
 		#end
-		
 		var command1:Void->Void= function() _counter++;
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(10, _counter);
 		var task:Task = new Task();
 		task.for_(10).next(MockOperation, ["test1", 100, false, command1]).end();
-		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(10, _counter));
 		task.execute();
 	}
 
 	@Test
 	public function testWhileLoop() {
-		var returnResult:Void->Bool = function():Bool return (_counter++ != 10);
+		var returnResult:Void->Bool = function():Bool return _counter++ != 10;
 		var condition = new FunctionConditionProvider(returnResult);
 		var command = new MockAsyncCommand();
-		
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.isTrue(true);
 		var task:Task = new Task();
 		task.while_(condition).and(command).end();
-		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.isTrue(true));
 		task.execute();
 		
 	}
@@ -196,14 +178,11 @@ class TaskTest extends AbstractTestWithMockRepository {
 		#else
 		haxe.Timer.delay(handler, 1900);
 		#end
-		
-		var returnResult:Void->Bool = function() return (_counter != 10);
-		var condition:IConditionProvider = new FunctionConditionProvider(returnResult);
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(_counter, 10);
-		var command1:Void->Void = function() _counter++;
-		var task:Task = new Task();
-		task.while_(condition).next(MockOperation, ["test1", 100, false, command1]).end();
-		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
+		var task:ITask = new Task()
+			.while_(new FunctionConditionProvider(function() return _counter != 10))
+			.next(MockOperation, ["test1", 100, false, function() _counter++])
+			.end();
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(_counter, 10));
 		task.execute();
 	}
 }

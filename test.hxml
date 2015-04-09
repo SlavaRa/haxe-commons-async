@@ -4,7 +4,7 @@
 -lib hamcrest
 -lib openfl
 -cp src
--cp src/test
+-cp tests
 -swf-version 12
 -D legacy
 -swf bin/test/as3_test.swf
@@ -16,7 +16,7 @@
 -lib hamcrest
 -lib openfl
 -cp src
--cp src/test
+-cp tests
 -swf-version 12
 -D v2
 -swf bin/test/as3_test.swf
@@ -29,7 +29,7 @@
 #-lib lime
 #-lib openfl
 #-cp src
-#-cp src/test
+#-cp tests
 #-D legacy
 #-js bin/test/js_test.js
 #--remap flash:openfl
@@ -42,7 +42,7 @@
 #-lib lime
 #-lib openfl
 #-cp src
-#-cp src/test
+#-cp tests
 #-D v2
 #-js bin/test/js_test.js
 #--remap flash:openfl
@@ -55,7 +55,7 @@
 -lib lime
 -lib openfl
 -cp src
--cp src/test
+-cp tests
 -D legacy
 -neko bin/test/neko_test.n
 --remap flash:openfl
@@ -68,7 +68,7 @@
 -lib lime
 -lib openfl
 -cp src
--cp src/test
+-cp tests
 -D v2
 -neko bin/test/neko_test.n
 --remap flash:openfl
@@ -81,7 +81,7 @@
 -lib lime
 -lib openfl
 -cp src
--cp src/test
+-cp tests
 #-D HXCPP_M64
 -D legacy
 -cpp bin/test/cpp_test
@@ -95,7 +95,7 @@
 -lib lime
 -lib openfl
 -cp src
--cp src/test
+-cp tests
 #-D HXCPP_M64
 -D v2
 -cpp bin/test/cpp_test
