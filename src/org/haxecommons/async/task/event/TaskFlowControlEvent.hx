@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.task.event;
-import flash.events.Event;
+import openfl.events.Event;
 import org.haxecommons.async.task.TaskFlowControlKind;
 
 /**

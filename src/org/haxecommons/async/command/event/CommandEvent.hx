@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.command.event;
-import flash.events.Event;
+import openfl.events.Event;
 import org.haxecommons.async.command.ICommand;
 
 /**

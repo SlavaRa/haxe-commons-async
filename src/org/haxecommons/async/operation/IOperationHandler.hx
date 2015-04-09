@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 package org.haxecommons.async.operation;
-import flash.events.IEventDispatcher;
+import openfl.events.IEventDispatcher;
 
 interface IOperationHandler extends IEventDispatcher {
 	

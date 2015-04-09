@@ -15,11 +15,11 @@
  */
 package org.haxecommons.async.operation.impl;
 import haxe.Timer;
-import flash.net.NetConnection;
+import openfl.net.NetConnection;
 
 /**
  * An <code>IOperation</code> that invokes a method on a <code>NetConnection</code>.
- * @see flash.net.NetConnection
+ * @see openfl.net.NetConnection
  * @author Christophe Herreman
  */
 class NetConnectionOperation extends AbstractOperation {

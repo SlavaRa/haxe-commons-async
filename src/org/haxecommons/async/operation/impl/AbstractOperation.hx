@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.impl;
-import flash.events.EventDispatcher;
+import openfl.events.EventDispatcher;
 import haxe.Timer;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.IOperation;

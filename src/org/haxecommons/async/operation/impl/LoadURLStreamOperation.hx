@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.impl;
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.events.ProgressEvent;
-import flash.events.SecurityErrorEvent;
-import flash.net.URLRequest;
-import flash.net.URLStream;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.events.ProgressEvent;
+import openfl.events.SecurityErrorEvent;
+import openfl.net.URLRequest;
+import openfl.net.URLStream;
 
 /**
  * An <code>IOperation</code> implementation that can load a stream from the specified URL.

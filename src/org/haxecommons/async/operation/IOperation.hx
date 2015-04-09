@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation;
-import flash.events.Event;
-import flash.events.IEventDispatcher;
+import openfl.events.Event;
+import openfl.events.IEventDispatcher;
 
 /**
  * The IOperation interface describes an asynchronous operation. It serves as handle for asynchronous executions

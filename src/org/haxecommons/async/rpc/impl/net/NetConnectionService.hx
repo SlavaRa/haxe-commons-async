@@ -17,7 +17,7 @@ package org.haxecommons.async.rpc.impl.net;
 import org.haxecommons.async.operation.impl.NetConnectionOperation;
 import org.haxecommons.async.operation.IOperation;
 import org.haxecommons.async.rpc.IService;
-import flash.net.NetConnection;
+import openfl.net.NetConnection;
 
 /**
  * Service that invokes methods on a NetConnection and returns an IOperation for each of these calls.

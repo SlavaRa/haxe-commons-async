@@ -1,49 +1,102 @@
-## Flash 9+
+## Flash-legacy
 -main TestMain
 -lib munit
 -lib hamcrest
+-lib openfl
 -cp src
-
 -cp src/test
--swf-version 11
+-swf-version 12
+-D legacy
 -swf bin/test/as3_test.swf
-
 --next
 
-## JavaScript
+## Flash-v2
 -main TestMain
 -lib munit
 -lib hamcrest
 -lib openfl
--lib openfl-html5
---remap flash:flash
-
 -cp src
 -cp src/test
--js bin/test/js_test.js
-
+-swf-version 12
+-D v2
+-swf bin/test/as3_test.swf
 --next
 
-## Neko
--main TestMain
--lib munit
--lib hamcrest
--lib openfl
--lib openfl-native
---remap flash:flash
-
--cp src
--cp src/test
--neko bin/test/neko_test.n
-
---next
-
-## CPP
+## JavaScript-legacy
 #-main TestMain
 #-lib munit
 #-lib hamcrest
+#-lib lime
+#-lib openfl
 #-cp src
-#
 #-cp src/test
-##-D HXCPP_M64
-#-cpp bin/test/cpp_test
+#-D legacy
+#-js bin/test/js_test.js
+#--remap flash:openfl
+#--next
+
+## JavaScript-v2
+#-main TestMain
+#-lib munit
+#-lib hamcrest
+#-lib lime
+#-lib openfl
+#-cp src
+#-cp src/test
+#-D v2
+#-js bin/test/js_test.js
+#--remap flash:openfl
+#--next
+
+## Neko-legacy
+-main TestMain
+-lib munit
+-lib hamcrest
+-lib lime
+-lib openfl
+-cp src
+-cp src/test
+-D legacy
+-neko bin/test/neko_test.n
+--remap flash:openfl
+--next
+
+## Neko-v2
+-main TestMain
+-lib munit
+-lib hamcrest
+-lib lime
+-lib openfl
+-cp src
+-cp src/test
+-D v2
+-neko bin/test/neko_test.n
+--remap flash:openfl
+--next
+
+## CPP-legacy
+-main TestMain
+-lib munit
+-lib hamcrest
+-lib lime
+-lib openfl
+-cp src
+-cp src/test
+#-D HXCPP_M64
+-D legacy
+-cpp bin/test/cpp_test
+--remap flash:openfl
+--next
+
+## CPP-v2
+-main TestMain
+-lib munit
+-lib hamcrest
+-lib lime
+-lib openfl
+-cp src
+-cp src/test
+#-D HXCPP_M64
+-D v2
+-cpp bin/test/cpp_test
+--remap flash:openfl

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.command.impl;
-import flash.system.ApplicationDomain;
+import openfl.system.ApplicationDomain;
 import org.haxecommons.async.command.IAsyncCommand;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.impl.AbstractProgressOperation;

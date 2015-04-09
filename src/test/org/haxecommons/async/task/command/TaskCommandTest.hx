@@ -1,5 +1,5 @@
 package org.haxecommons.async.task.command;
-import flash.events.Event;
+import openfl.events.Event;
 import massive.munit.Assert;
 import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.command.impl.MockAsyncCommand;

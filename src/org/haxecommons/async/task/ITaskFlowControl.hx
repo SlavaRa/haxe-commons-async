@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.task;
-import flash.events.IEventDispatcher;
+import openfl.events.IEventDispatcher;
 
 /**
  * Describes an object that can influence the flow of control within a task.

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.impl;
-import flash.events.Event;
-import flash.events.EventDispatcher;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
 import haxe.ds.WeakMap.WeakMap;
 import org.hamcrest.Exception.MissingImplementationException;
 import org.haxecommons.async.operation.event.OperationEvent;

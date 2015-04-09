@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 package org.haxecommons.async.task.command;
-import flash.events.TimerEvent;
-import flash.utils.Timer;
+import openfl.events.TimerEvent;
+import openfl.utils.Timer;
 import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.operation.impl.AbstractOperation;
 

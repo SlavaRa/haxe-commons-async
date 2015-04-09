@@ -23,7 +23,6 @@ class WhileBlockTest extends AbstractTestWithMockRepository {
 	@Test
 	public function testExecute() {
 		var command = new MockAsyncCommand();
-		
 		var wb = new WhileBlock(new FunctionConditionProvider(whileFunction));
 		wb.and(command);
 		wb.execute();
@@ -37,15 +36,13 @@ class WhileBlockTest extends AbstractTestWithMockRepository {
 		#else
 		haxe.Timer.delay(handler, 1900);
 		#end 
-		
 		var command1:Void->Void = function() Assert.isTrue(_counter < 11);
 		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(11, _counter);
-		
 		var wb = new WhileBlock(new FunctionConditionProvider(whileFunction));
 		wb.next(MockOperation, ["test1", 100, false, command1]).end();
 		wb.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
 		wb.execute();
 	}
 
-	function whileFunction():Bool return (_counter++ < 10);
+	function whileFunction():Bool return _counter++ < 10;
 }

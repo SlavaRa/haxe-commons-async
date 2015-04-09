@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.task.command;
-import flash.events.EventDispatcher;
+import openfl.events.EventDispatcher;
 import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.task.event.TaskFlowControlEvent;
 import org.haxecommons.async.task.ITaskFlowControl;
