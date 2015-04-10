@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ package org.haxecommons.async.task;
 	 * Converts, if possible, a <code>String</code> to its <code>TaskFlowControlKind</code> equivalent.
 	 * @param name the name of the requested <code>TaskFlowControlKind</code>.
 	 * @return A <code>TaskFlowControlKind</code> instance whose name value is equal to the specified <code>name</code> argument.
-	 * @throws flash.errors.Error Error when the specified name cannot be converted to a valid <code>TaskFlowControlKind</code> instance.
+	 * @throws openfl.errors.Error Error when the specified name cannot be converted to a valid <code>TaskFlowControlKind</code> instance.
 	 */
 	public static function fromName(name:String):TaskFlowControlKind {
 		switch (name.toLowerCase()) {

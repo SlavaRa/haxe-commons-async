@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.trigger.impl;
-import flash.errors.IllegalOperationError;
+import openfl.errors.IllegalOperationError;
 import haxe.Log;
 import org.haxecommons.async.operation.event.OperationEvent;
 

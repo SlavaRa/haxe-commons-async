@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.impl;
-import flash.events.ErrorEvent;
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.events.ProgressEvent;
-import flash.events.SecurityErrorEvent;
-import flash.net.URLLoader;
-import flash.net.URLLoaderDataFormat;
-import flash.net.URLRequest;
+import openfl.events.ErrorEvent;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.events.ProgressEvent;
+import openfl.events.SecurityErrorEvent;
+import openfl.net.URLLoader;
+import openfl.net.URLLoaderDataFormat;
+import openfl.net.URLRequest;
 
 /**
  * An <code>IOperation</code> implementation that can load arbitrary data from a specified URL.
@@ -33,8 +33,8 @@ class LoadURLOperation extends AbstractProgressOperation {
 	 * Creates a new <code>LoadURLOperation</code> instance.
 	 * @param url The specified URL from which the data will be loaded.
 	 * @param dataFormat Optional argument that specifies the data format of the expected data.
-	 * Use the <code>flash.net.URLLoaderDataFormat</code> enumeration for this.
-	 * @see flash.net.URLLoaderDataFormat
+	 * Use the <code>openfl.net.URLLoaderDataFormat</code> enumeration for this.
+	 * @see openfl.net.URLLoaderDataFormat
 	 */
 	public function new(url:String, ?dataFormat:String, ?request:URLRequest) {
 		#if debug

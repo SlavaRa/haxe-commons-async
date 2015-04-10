@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.command.event;
-import flash.events.Event;
+import openfl.events.Event;
 import org.haxecommons.async.command.ICommand;
 
 /**

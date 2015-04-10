@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.haxecommons.async.rpc.impl.net;
 import org.haxecommons.async.operation.impl.NetConnectionOperation;
 import org.haxecommons.async.operation.IOperation;
 import org.haxecommons.async.rpc.IService;
-import flash.net.NetConnection;
+import openfl.net.NetConnection;
 
 /**
  * Service that invokes methods on a NetConnection and returns an IOperation for each of these calls.

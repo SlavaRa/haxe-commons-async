@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.impl;
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.events.ProgressEvent;
-import flash.events.SecurityErrorEvent;
-import flash.net.URLRequest;
-import flash.net.URLStream;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.events.ProgressEvent;
+import openfl.events.SecurityErrorEvent;
+import openfl.net.URLRequest;
+import openfl.net.URLStream;
 
 /**
  * An <code>IOperation</code> implementation that can load a stream from the specified URL.
