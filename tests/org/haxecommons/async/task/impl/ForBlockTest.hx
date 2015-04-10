@@ -1,11 +1,9 @@
 package org.haxecommons.async.task.impl;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
-import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.command.impl.MockAsyncCommand;
 import org.haxecommons.async.operation.impl.MockOperation;
 import org.haxecommons.async.task.event.TaskEvent;
-import org.haxecommons.async.task.ICountProvider;
 import org.haxecommons.async.task.impl.ForBlock;
 import org.haxecommons.async.test.AbstractTestWithMockRepository;
 
@@ -16,60 +14,45 @@ class ForBlockTest extends AbstractTestWithMockRepository {
 
 	public function new() super();
 
-	private var _counter:Int;
-
-	@Before
-	public function setUp() _counter = 0;
-
 	@Test
 	public function testExecute() {
-		var count = new CountProvider();
-		var command = new MockAsyncCommand();
-		
-		var fb:ForBlock = new ForBlock(count);
-		fb.and(command).end();
-		fb.execute();
+		new ForBlock(new CountProvider())
+			.and(new MockAsyncCommand())
+			.end()
+			.execute();
 	}
 
 	@AsyncTest
-	public function testExecuteWithAsync(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 1900).run();
-		#else
-		haxe.Timer.delay(handler, 1900);
+	public function testExecuteWithAsync(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 300), 200);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		
-		var count = new CountProvider(10);
-		var command1:Void->Void = function() _counter++;
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(_counter, 10);
-		
-		var fb:ForBlock = new ForBlock(count);
-		fb.next(MockOperation, ["test1", 100, false, command1]).end();
-		fb.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
-		fb.execute();
+		var i = 0;
+		var task = new ForBlock(new CountProvider(10))
+			.next(MockOperation, ["test1", 100, false, function() i++])
+			.end();
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(10, i));
+		task.execute();
 	}
 
 	@Test
 	public function testExecuteWithBreak() {
-		var count = new CountProvider();
-		var command = new MockAsyncCommand();
-		var command2 = new MockAsyncCommand();
-		
-		var fb:ForBlock = new ForBlock(count);
-		fb.and(command).break_().and(command2).end();
-		fb.execute();
+		new ForBlock(new CountProvider())
+			.and(new MockAsyncCommand())
+			.break_()
+			.and(new MockAsyncCommand())
+			.end()
+			.execute();
 	}
 
 	@Test
 	public function testExecuteWithContinue() {
-		var count:ICountProvider = new CountProvider();
-		var command:ICommand = new MockAsyncCommand();
-		var command2:ICommand = new MockAsyncCommand();
-		
-		var fb:ForBlock = new ForBlock(count);
-		fb.and(command).continue_().and(command2).end();
-		fb.execute();
+		new ForBlock(new CountProvider())
+			.and(new MockAsyncCommand())
+			.continue_()
+			.and(new MockAsyncCommand())
+			.end()
+			.execute();
 	}
-	
 }

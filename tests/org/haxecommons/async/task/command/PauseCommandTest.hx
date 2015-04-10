@@ -10,26 +10,21 @@ import org.haxecommons.async.task.command.PauseCommand;
  */
 class PauseCommandTest {
 
-	public function new() {
-	}
+	public function new() {}
 	
 	@AsyncTest
-	public function testExecute(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 1900).run();
-		#else
-		haxe.Timer.delay(handler, 1900);
+	public function testExecute(factory:AsyncFactory) {
+		var t = Timer.delay(factory.createHandler(this, function(){}, 2000), 1900);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		
-		var pc = new PauseCommand(500);
-		var handleError:Void->Void = function() Assert.isTrue(false);
-		var timer = Timer.delay(handleError, 1000);
+		var command = new PauseCommand(500);
+		var timer = Timer.delay(function() Assert.fail(""), 1000);
 		var handleComplete:OperationEvent->Void = function(event:OperationEvent) {
-			Assert.areEqual(pc, event.target);
+			Assert.areEqual(command, event.target);
 			timer.stop();
 		};
-		pc.addCompleteListener(handleComplete);
-		pc.execute();
+		command.addCompleteListener(handleComplete);
+		command.execute();
 	}
 }

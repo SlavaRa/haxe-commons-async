@@ -47,7 +47,6 @@ package org.haxecommons.async.command;
 		if(name == null || name.length == 0) {
 			return null;
 		}
-		
 		return _kinds.get(name);
 	}
 	

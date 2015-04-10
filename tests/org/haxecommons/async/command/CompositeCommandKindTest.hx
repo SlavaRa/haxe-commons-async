@@ -7,9 +7,7 @@ import org.haxecommons.async.command.CompositeCommandKind;
  */
 class CompositeCommandKindTest {
 
-	public function new() {
-		
-	}
+	public function new() {}
 	
 	@Test
 	public function testEnumMembers() {
@@ -19,23 +17,15 @@ class CompositeCommandKindTest {
 
 	@Test
 	public function testFromNameWithUnknownName() {
-		var kind = CompositeCommandKind.fromName("unknown");
-		Assert.isNull(kind);
+		Assert.isNull(CompositeCommandKind.fromName("unknown"));
+		Assert.isNull(CompositeCommandKind.fromName(null));
 	}
 
 	@Test
 	public function testFromNameWithValidNames() {
-		var kind = CompositeCommandKind.fromName("sequence");
-		Assert.areEqual(kind, CompositeCommandKind.SEQUENCE);
-		
-		kind = CompositeCommandKind.fromName("parallel");
-		Assert.areEqual(kind, CompositeCommandKind.PARALLEL);
-		
-		kind = CompositeCommandKind.fromName("SEQUENCE");
-		Assert.areNotEqual(kind, CompositeCommandKind.SEQUENCE);
-		
-		kind = CompositeCommandKind.fromName("PARALLEL");
-		Assert.areNotEqual(kind, CompositeCommandKind.PARALLEL);
+		Assert.areEqual(CompositeCommandKind.SEQUENCE, CompositeCommandKind.fromName("sequence"));
+		Assert.areEqual(CompositeCommandKind.PARALLEL, CompositeCommandKind.fromName("parallel"));
+		Assert.areNotEqual(CompositeCommandKind.SEQUENCE, CompositeCommandKind.fromName("SEQUENCE"));
+		Assert.areNotEqual(CompositeCommandKind.PARALLEL, CompositeCommandKind.fromName("PARALLEL"));
 	}
-	
 }

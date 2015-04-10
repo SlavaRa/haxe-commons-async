@@ -1,5 +1,4 @@
 package org.haxecommons.async.operation;
-import haxe.Log;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 import org.haxecommons.async.operation.event.OperationEvent;
@@ -14,29 +13,19 @@ class OperationQueueTest extends AbstractTestWithMockRepository {
 
 	public function new() super();
 	
-	var _queue:OperationQueue;
-
-	@Before
-	public function setUp() _queue = new OperationQueue();
-
 	@AsyncTest
-	public function testQueue(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 1000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 900).run();
-		#else
-		haxe.Timer.delay(handler, 900);
+	public function testQueue(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		
-		var o1 = Type.createInstance(AbstractOperation, []);
-		var o2 = Type.createInstance(AbstractOperation, []);
-		
-		_queue.addOperation(o1);
-		_queue.addOperation(o2);
-		
-		var handleComplete:OperationEvent->Void = function(event:OperationEvent) Assert.areEqual(_queue, event.target);
-		_queue.addEventListener(OperationEvent.COMPLETE, handleComplete);
-		o1.dispatchCompleteEvent();
-		o2.dispatchCompleteEvent();
+		var queue = new OperationQueue();
+		var operation0 = Type.createInstance(AbstractOperation, []);
+		var operation1 = Type.createInstance(AbstractOperation, []);
+		queue.addOperation(operation0);
+		queue.addOperation(operation1);
+		queue.addEventListener(OperationEvent.COMPLETE, function(event:OperationEvent) Assert.areEqual(queue, event.target));
+		operation0.dispatchCompleteEvent();
+		operation1.dispatchCompleteEvent();
 	}
 }

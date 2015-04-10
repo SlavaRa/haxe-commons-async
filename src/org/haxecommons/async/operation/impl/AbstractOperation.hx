@@ -33,10 +33,8 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	 */
 	public function new(timeoutInMilliseconds:Int = 0, autoStartTimeout:Bool = true) {
 		super(this);
-		
 		timeout = timeoutInMilliseconds;
 		_autoStartTimeout = autoStartTimeout;
-		
 		if (autoStartTimeout) {
 			startTimeout();
 		}
@@ -92,14 +90,12 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	 * @return true if the event was dispatched; false if not
 	 */
 	public function dispatchCompleteEvent(?result:Dynamic):Bool {
-		if (_timedOut) {
+		if(_timedOut) {
 			return false;
 		}
-		
-		if (result != null) {
+		if(result != null) {
 			this.result = result;
 		}
-		
 		return dispatchEvent(OperationEvent.createCompleteEvent(this));
 	}
 	
@@ -109,14 +105,12 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	 * @return true if the event was dispatched; false if not
 	 */
 	public function dispatchErrorEvent(?error:Dynamic):Bool {
-		if (_timedOut) {
+		if(_timedOut) {
 			return false;
 		}
-		
-		if (error != null) {
+		if(error != null) {
 			this.error = error;
 		}
-		
 		return dispatchEvent(OperationEvent.createErrorEvent(this));
 	}
 	
@@ -155,13 +149,11 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	function errorHandler(event:OperationEvent) stopTimeout();
 
 	function startTimeout() {
-		if (timeout <= 0) {
+		if(timeout <= 0) {
 			return;
 		}
-		
 		addCompleteListener(completeHandler);
 		addErrorListener(errorHandler);
-		
 		_timer = Timer.delay(timeoutHandler, timeout);
 	}
 
@@ -169,7 +161,6 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 		if(_timer == null) {
 			return;
 		}
-		
 		_timer.stop();
 		_timer = null;
 	}

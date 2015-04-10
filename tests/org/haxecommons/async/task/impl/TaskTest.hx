@@ -4,7 +4,6 @@ import massive.munit.async.AsyncFactory;
 import org.haxecommons.async.command.impl.MockAsyncCommand;
 import org.haxecommons.async.operation.impl.MockOperation;
 import org.haxecommons.async.task.event.TaskEvent;
-import org.haxecommons.async.task.IConditionProvider;
 import org.haxecommons.async.task.impl.FunctionConditionProvider;
 import org.haxecommons.async.task.impl.Task;
 import org.haxecommons.async.test.AbstractTestWithMockRepository;
@@ -16,173 +15,142 @@ class TaskTest extends AbstractTestWithMockRepository {
 
 	public function new() super();
 	
-	private var _counter:Int;
-
-	@Before
-	public function setUp() _counter = 0;
-
-	function incCounter():Dynamic {
-		_counter++;
-		return null;
-	}
-
 	@Test
 	public function testAnd() {
-		var task = new Task();
-		task.and(new MockAsyncCommand());
+		new Task()
+			.and(new MockAsyncCommand())
+			.execute();
+	}
+
+	@AsyncTest
+	public function testAndAsync(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		#if ((neko && !display) || cpp)
+		t.run();
+		#end
+		var i = 0;
+		var task = new Task()
+			.and(new MockAsyncCommand(false, 1, function() {i++; return null;}));
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(1, i));
 		task.execute();
 	}
 
 	@AsyncTest
-	public function testAndAsync(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 500);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 400).run();
-		#else
-		haxe.Timer.delay(handler, 400);
+	public function testAndMultipleAsync(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 6000), 5900);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		var task = new Task();
-		task.and(new MockAsyncCommand(false, 1, incCounter));
-		task.addEventListener(TaskEvent.TASK_COMPLETE, onTaskComplete);
+		var i = 0;
+		var task = new Task()
+			.and(MockOperation, ["test1", 4000, false, function() Assert.areEqual(1, i)])
+			.and(MockOperation, ["test2", 1000, false, function() Assert.areEqual(0, i++)]);
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(1, i));
 		task.execute();
 	}
-
-	@AsyncTest
-	public function testAndMultipleAsync(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 6000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 5900).run();
-		#else
-		haxe.Timer.delay(handler, 5900);
-		#end
-		var counter:Int = 0;
-		var command1:Void->Void = function() Assert.areEqual(1, counter);
-		var command2:Void->Void = function() {
-			Assert.areEqual(0, counter);
-			counter++;
-		}
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(1, counter);
-		var task = new Task();
-		task.and(MockOperation, ["test1", 4000, false, command1]).and(MockOperation, ["test2", 1000, false, command2]);
-		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
-		task.execute();
-	}
-
-	function onTaskComplete(event:TaskEvent) Assert.areEqual(1, _counter);
 
 	@Test
 	public function testAndAsyncNotAsyncMixed() {
-		var c = new MockAsyncCommand();
-		var task = new Task();
-		task.and(new MockAsyncCommand(false, 1, incCounter)).and(c);
-		task.addEventListener(TaskEvent.TASK_COMPLETE, onTaskComplete);
+		var i = 0;
+		var task = new Task()
+			.and(new MockAsyncCommand(false, 1, function() {i++; return null;}))
+			.and(new MockAsyncCommand());
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(1, i));
 		task.execute();
 	}
 
 	@Test
 	public function testNext() {
-		var c = new MockAsyncCommand();
-		var task = new Task();
-		task.next(c);
+		new Task()
+			.next(new MockAsyncCommand())
+			.execute();
+	}
+
+	@AsyncTest
+	public function testNextAsync(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 500), 400);
+		#if ((neko && !display) || cpp)
+		t.run();
+		#end
+		var i = 0;
+		var task = new Task()
+			.next(new MockAsyncCommand(false, 1, function() {i++; return null;}));
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(1, i));
 		task.execute();
 	}
 
 	@AsyncTest
-	public function testNextAsync(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 500);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 400).run();
-		#else
-		haxe.Timer.delay(handler, 400);
+	public function testNextMultipleAsync(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 6000), 5900);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		var task = new Task();
-		task.next(new MockAsyncCommand(false, 1, incCounter));
-		task.addEventListener(TaskEvent.TASK_COMPLETE, onTaskComplete);
-		task.execute();
-	}
-
-	@AsyncTest
-	public function testNextMultipleAsync(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 6000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 5900).run();
-		#else
-		haxe.Timer.delay(handler, 5900);
-		#end
-		var counter:Int = 0;
-		var command1:Void->Void = function() {
-			Assert.areEqual(0, counter);
-			counter++;
-		}
-		var command2:Void->Void = function() Assert.areEqual(1, counter);
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.areEqual(1, counter);
-		var task = new Task();
-		task.next(MockOperation,["test1", 4000, false, command1]).next(MockOperation, ["test2", 1000, false, command2]);
-		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
+		var i = 0;
+		var task = new Task()
+			.next(MockOperation, ["test1", 4000, false, function() Assert.areEqual(0, i++)])
+			.next(MockOperation, ["test2", 1000, false, function() Assert.areEqual(1, i)]);
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(1, i));
 		task.execute();
 	}
 
 	@Test
 	public function testForLoopWithCountProvider() {
-		var count = new CountProvider();
-		var command = new MockAsyncCommand();
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.isTrue(true);
-		var task = new Task();
-		task.for_(0, count).and(command).end();
-		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
+		var task = new Task()
+			.for_(0, new CountProvider())
+			.and(new MockAsyncCommand())
+			.end();
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.isTrue(true));
 		task.execute();
 	}
 
 	@Test
 	public function testForLoopWithFixedCount() {
-		var command = new MockAsyncCommand();
-		var handleComplete:TaskEvent->Void = function(event:TaskEvent) Assert.isTrue(true);
-		var task:Task = new Task();
-		task.for_(10).and(command).end();
-		task.addEventListener(TaskEvent.TASK_COMPLETE, handleComplete);
+		var task = new Task()
+			.for_(10)
+			.and(new MockAsyncCommand())
+			.end();
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.isTrue(true));
 		task.execute();
 	}
 
 	@AsyncTest
-	public function testForLoopWithAsyncCommand(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 1900).run();
-		#else
-		haxe.Timer.delay(handler, 1900);
+	public function testForLoopWithAsyncCommand(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 300), 200);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		var command1:Void->Void= function() _counter++;
-		var task:Task = new Task();
-		task.for_(10).next(MockOperation, ["test1", 100, false, command1]).end();
-		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(10, _counter));
+		var i = 0;
+		var task = new Task()
+			.for_(10)
+			.next(MockOperation, ["test1", 100, false, function() i++])
+			.end();
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(10, i));
 		task.execute();
 	}
 
 	@Test
 	public function testWhileLoop() {
-		var returnResult:Void->Bool = function():Bool return _counter++ != 10;
-		var condition = new FunctionConditionProvider(returnResult);
-		var command = new MockAsyncCommand();
-		var task:Task = new Task();
-		task.while_(condition).and(command).end();
+		var i = 0;
+		var task = new Task()
+			.while_(new FunctionConditionProvider(function() return i++ != 10))
+			.and(new MockAsyncCommand())
+			.end();
 		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.isTrue(true));
 		task.execute();
-		
 	}
 
 	@AsyncTest
-	public function testWhileLoopWithAsync(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 1900).run();
-		#else
-		haxe.Timer.delay(handler, 1900);
+	public function testWhileLoopWithAsync(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 2000), 1900);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		var task:ITask = new Task()
-			.while_(new FunctionConditionProvider(function() return _counter != 10))
-			.next(MockOperation, ["test1", 100, false, function() _counter++])
+		var i = 0;
+		var task = new Task()
+			.while_(new FunctionConditionProvider(function() return i != 10))
+			.next(MockOperation, ["test1", 100, false, function() i++])
 			.end();
-		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(_counter, 10));
+		task.addEventListener(TaskEvent.TASK_COMPLETE, function(_) Assert.areEqual(10, i));
 		task.execute();
 	}
 }

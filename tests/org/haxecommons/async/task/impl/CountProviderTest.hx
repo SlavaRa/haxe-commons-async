@@ -4,12 +4,10 @@ import org.haxecommons.async.task.impl.CountProvider;
 
 class CountProviderTest {
 
-	public function new() {
-	}
+	public function new() {}
 	
 	@Test
 	public function testGetCount() {
-		var cp = new CountProvider(100);
-		Assert.areEqual(100, cp.getCount());
+		Assert.areEqual(100, new CountProvider(100).getCount());
 	}
 }
