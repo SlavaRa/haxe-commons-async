@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,15 +35,15 @@ interface ICompositeCommand extends ICommand extends IOperation {
 	var kind(default, null):CompositeCommandKind;
 	
 	/**
-	 * 
-	 */
-	function addCommandAt(command:ICommand, index:Int):ICompositeCommand;
-	
-	/**
 	 * Adds an <code>ICommand</code> to the current <code>ICompositeCommand</code>.
 	 * @return The current <code>ICompositeCommand</code>, this way calls to <code>addCommand()</code> can be chained.
 	 */
 	function addCommand(command:ICommand):ICompositeCommand;
+	
+	/**
+	 * 
+	 */
+	function addCommandAt(command:ICommand, index:Int):ICompositeCommand;
 	
 	/**
 	 * Adds a <code>Class</code> that is an <code>IOperation</code> implementation along with its optional cosntructor arguments.

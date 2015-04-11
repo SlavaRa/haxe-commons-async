@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class OperationQueue extends AbstractProgressOperation implements IOperationQueu
 		super();
 		_queueCounter++;
 		_operations = [];
-		this.name = (name == null || name.length == 0) ? "queue_" +Std.string(_queueCounter) : name;
+		this.name = (name == null || name.length == 0) ? "queue_" + Std.string(_queueCounter) : name;
 	}
 	
 	/**
@@ -57,10 +57,7 @@ class OperationQueue extends AbstractProgressOperation implements IOperationQueu
 	 * @return true if the operation was added; false if not
 	 */
 	public function addOperation(operation:IOperation):Bool {
-		if (hasOperation(operation)) {
-			return false;
-		}
-		
+		if(hasOperation(operation)) return false;
 		_operations[_operations.length] = operation;
 		addOperationListeners(operation);
 		total++;
@@ -81,10 +78,7 @@ class OperationQueue extends AbstractProgressOperation implements IOperationQueu
 	 * the specified <code>operation</code> instance.
 	 */
 	function addOperationListeners(?operation:IOperation) {
-		if (operation == null) {
-			return;
-		}
-		
+		if(operation == null) return;
 		operation.addCompleteListener(operation_completeHandler);
 		operation.addErrorListener(operation_errorHandler);
 	}
@@ -99,12 +93,8 @@ class OperationQueue extends AbstractProgressOperation implements IOperationQueu
 		removeOperationListeners(event.operation);
 		removeOperation(event.operation);
 		progress++;
-		
-		if (_operations.length == 0) {
-			dispatchCompleteEvent();
-		} else {
-			dispatchProgressEvent();
-		}
+		if(_operations.length == 0) dispatchCompleteEvent();
+		else dispatchProgressEvent();
 	}
 	
 	/**
@@ -114,28 +104,21 @@ class OperationQueue extends AbstractProgressOperation implements IOperationQueu
 		removeOperationListeners(event.operation);
 		removeOperation(event.operation);
 		progress++;
-		
-		if (Std.is(event.operation, OperationQueue)) {
+		if(Std.is(event.operation, OperationQueue)) {
 			var queue = cast(event.operation, OperationQueue);
 			var queueComplete = (queue.progress == queue.total);
-			
-			if (queueComplete) {
+			if(queueComplete) {
 				redispatchErrorAndContinue(event.error);
 				return;
 			}
 		}
-		
 		redispatchErrorAndContinue(event.error);
 	}
 
 	function redispatchErrorAndContinue(error:Dynamic) {
 		dispatchErrorEvent(error);
-		
-		if (_operations.length == 0) {
-			dispatchCompleteEvent();
-		} else {
-			dispatchProgressEvent();
-		}
+		if(_operations.length == 0) dispatchCompleteEvent();
+		else dispatchProgressEvent();
 	}
 
 	function removeOperation(operation:IOperation) _operations.remove(operation);
@@ -145,12 +128,8 @@ class OperationQueue extends AbstractProgressOperation implements IOperationQueu
 	 * the specified <code>operation</code> instance.
 	 */
 	function removeOperationListeners(?operation:IOperation) {
-		if (operation == null) {
-			return;
-		}
-		
+		if(operation == null) return;
 		operation.removeCompleteListener(operation_completeHandler);
 		operation.removeErrorListener(operation_errorHandler);
 	}
-	
 }

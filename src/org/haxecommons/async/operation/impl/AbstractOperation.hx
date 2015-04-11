@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.impl;
-import flash.events.EventDispatcher;
 import haxe.Timer;
+import openfl.events.EventDispatcher;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.IOperation;
 
@@ -27,19 +27,14 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 
 	/**
 	 * Creates a new <code>AbstractOperation</code>.
-	 *
 	 * @param timeoutInMilliseconds
 	 * @param autoStartTimeout
 	 */
 	public function new(timeoutInMilliseconds:Int = 0, autoStartTimeout:Bool = true) {
 		super(this);
-		
 		timeout = timeoutInMilliseconds;
 		_autoStartTimeout = autoStartTimeout;
-		
-		if (autoStartTimeout) {
-			startTimeout();
-		}
+		if(autoStartTimeout) startTimeout();
 	}
 	
 	/**
@@ -92,14 +87,8 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	 * @return true if the event was dispatched; false if not
 	 */
 	public function dispatchCompleteEvent(?result:Dynamic):Bool {
-		if (_timedOut) {
-			return false;
-		}
-		
-		if (result != null) {
-			this.result = result;
-		}
-		
+		if(_timedOut) return false;
+		if(result != null) this.result = result;
 		return dispatchEvent(OperationEvent.createCompleteEvent(this));
 	}
 	
@@ -109,14 +98,8 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	 * @return true if the event was dispatched; false if not
 	 */
 	public function dispatchErrorEvent(?error:Dynamic):Bool {
-		if (_timedOut) {
-			return false;
-		}
-		
-		if (error != null) {
-			this.error = error;
-		}
-		
+		if(_timedOut) return false;
+		if(error != null) this.error = error;
 		return dispatchEvent(OperationEvent.createErrorEvent(this));
 	}
 	
@@ -155,21 +138,14 @@ class AbstractOperation extends EventDispatcher implements IOperation {
 	function errorHandler(event:OperationEvent) stopTimeout();
 
 	function startTimeout() {
-		if (timeout <= 0) {
-			return;
-		}
-		
+		if(timeout <= 0) return;
 		addCompleteListener(completeHandler);
 		addErrorListener(errorHandler);
-		
 		_timer = Timer.delay(timeoutHandler, timeout);
 	}
 
 	function stopTimeout() {
-		if(_timer == null) {
-			return;
-		}
-		
+		if(_timer == null) return;
 		_timer.stop();
 		_timer = null;
 	}

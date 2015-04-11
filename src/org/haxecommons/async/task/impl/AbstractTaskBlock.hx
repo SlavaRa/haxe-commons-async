@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,14 +99,15 @@ class AbstractTaskBlock extends Task implements ITaskBlock {
 			resetCommandList();
 			completeExecution();
 			return false;
-		} else if(kind == TaskFlowControlKind.CONTINUE) {
+		} 
+		if(kind == TaskFlowControlKind.CONTINUE) {
 			restartExecution();
 			return false;
-		} else if(kind == TaskFlowControlKind.EXIT) {
+		} 
+		if(kind == TaskFlowControlKind.EXIT) {
 			exitExecution();
 			return false;
 		}
-		
 		return true;
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,13 +39,7 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 */
 	public function new(?kind:CompositeCommandKind) {
 		super();
-		
-		if(kind != null) {
-			this.kind = kind;
-		} else {
-			this.kind = CompositeCommandKind.SEQUENCE;
-		}
-		
+		this.kind = kind != null ? kind : CompositeCommandKind.SEQUENCE;
 		commands = [];
 	}
 	
@@ -56,23 +50,19 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 * @see org.haxecommons.async.command.IAsyncCommand IAsyncCommand
 	 */
 	public var failOnFault:Bool;
+	public function setFailOnFault(value:Bool):ICompositeCommand {
+		failOnFault = value;
+		return this;
+	}
 	
-	/**
-	 * 
-	 */
 	public var commands(default, default):Array<ICommand>;
-	
-	/**
-	 *
-	 */
 	public var kind(default, default):CompositeCommandKind;
 	
 	/**
 	 * @inheritDoc
 	 */
 	public var numCommands(get, null):Int;
-	
-	function get_numCommands() return commands.length;
+	inline function get_numCommands() return commands.length;
 	
 	/**
 	 * The <code>ICommand</code> that is currently being executed.
@@ -83,25 +73,22 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 * @inheritDoc
 	 */
 	public function execute():Dynamic {
-		if (commands != null) {
+		if(commands != null) {
 			if(kind == CompositeCommandKind.SEQUENCE) {
 				#if debug
 				Log.trace('Executing composite command $this in sequence.');
 				#end
-				
 				executeNextCommand();
 			} else if(kind == CompositeCommandKind.PARALLEL) {
 				#if debug
 				Log.trace('Executing composite command $this in parallel.');
 				#end
-				
 				executeCommandsInParallel();
 			}
 		} else {
 			#if debug
 			Log.trace("No commands were added to this composite command. Dispatching complete event.");
 			#end
-			
 			dispatchCompleteEvent();
 		}
 		return null;
@@ -114,10 +101,8 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		#if debug
 		if(command == null) throw "the command argument must not be null.";
 		#end
-		
 		commands[commands.length] = command;
 		total++;
-		
 		return this;
 	}
 	
@@ -125,12 +110,11 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 * @inheritDoc
 	 */
 	public function addCommandAt(command:ICommand, index:Int):ICompositeCommand {
-		if (index < commands.length) {
+		if(index < commands.length) {
 			commands.insert(index, command);
 			total++;
 			return this;
 		}
-		
 		return addCommand(command);
 	}
 
@@ -141,7 +125,6 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		#if debug
 		if(operationClass == null) throw "the operationClass argument must not be null.";
 		#end
-		
 		return addCommand(GenericOperationCommand.createNew(operationClass, constructorArgs));
 	}
 	
@@ -164,32 +147,24 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		if(command == null) throw "the command argument must not be null.";
 		Log.trace("Executing command: " + command);
 		#end
-		
 		currentCommand = command;
-		
 		addCommandListeners(cast(command, IOperation));
-		
 		dispatchEvent(new CommandEvent(CommandEvent.EXECUTE, command));
 		dispatchBeforeCommandEvent(command);
-		
 		command.execute();
-		
-		if (!Std.is(command, IOperation)) {
+		if(!Std.is(command, IOperation)) {
 			dispatchAfterCommandEvent(command);
 		}
-		
-		if (Std.is(command, IOperation)) {
+		if(Std.is(command, IOperation)) {
 			#if debug
 			Log.trace('Command $command is asynchronous. Waiting for response.');
 			#end
 		} else {
 			progress++;
 			dispatchProgressEvent();
-			
 			#if debug
 			Log.trace('Command $command is synchronous and is executed. Trying to execute next command.');
 			#end
-			
 			executeNextCommand();
 		}
 	}
@@ -200,20 +175,16 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 */
 	function executeNextCommand() {
 		var command = commands.shift();
-		
 		var nextCommand = commands.shift();
-		
-		if (Std.is(command, ICommand)) {
+		if(Std.is(command, ICommand)) {
 			#if debug
 			Log.trace('Executing next command $nextCommand. Remaining number of commands: ${commands.length}.');
 			#end
-			
 			executeCommand(nextCommand);
 		} else {
 			#if debug
 			Log.trace('All commands in $this have been executed. Dispatching \"complete\" event.');
 			#end
-			
 			dispatchCompleteEvent();
 		}
 	}
@@ -222,48 +193,30 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		#if debug
 		if(asyncCommand == null) throw "the asyncCommand argument must not be null";
 		#end
-		
-		if (commands == null || !Std.is(asyncCommand, ICommand)) {
-			return;
-		}
-		
+		if(commands == null || !Std.is(asyncCommand, ICommand)) return;
 		commands.remove(cast(asyncCommand, ICommand));
-		
-		if (commands.length == 0) {
-			dispatchCompleteEvent();
-		}
+		if(commands.length == 0) dispatchCompleteEvent();
 	}
 
 	function executeCommandsInParallel() {
 		var containsOperations = false;
-		
-		for (command in commands) {
-			if (Std.is(command, IOperation)) {
+		for(command in commands) {
+			if(Std.is(command, IOperation)) {
 				containsOperations = true;
 				addCommandListeners(cast(command, IOperation));
 			}
-			
 			dispatchBeforeCommandEvent(command);
 			command.execute();
-			
-			if (!Std.is(command, IOperation)) {
-				dispatchAfterCommandEvent(command);
-			}
+			if(!Std.is(command, IOperation)) dispatchAfterCommandEvent(command);
 		}
-		
-		if (!containsOperations) {
-			dispatchCompleteEvent();
-		}
+		if(!containsOperations) dispatchCompleteEvent();
 	}
 
 	/**
 	 * Adds the <code>onCommandResult</code> and <code>onCommandFault</code> event handlers to the specified <code>IAsyncCommand</code> instance.
 	 */
 	function addCommandListeners(?asyncCommand:IOperation) {
-		if (asyncCommand == null) {
-			return;
-		}
-		
+		if(asyncCommand == null) return;
 		asyncCommand.addCompleteListener(onCommandResult);
 		asyncCommand.addErrorListener(onCommandFault);
 	}
@@ -272,10 +225,7 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
      * Removes the <code>onCommandResult</code> and <code>onCommandFault</code> event handlers from the specified <code>IAsyncCommand</code> instance.
      */
 	function removeCommandListeners(?asyncCommand:IOperation) {
-		if (asyncCommand == null) {
-			return;
-		}
-		
+		if(asyncCommand == null) return;
 		asyncCommand.removeCompleteListener(onCommandResult);
 		asyncCommand.removeErrorListener(onCommandFault);
 	}
@@ -283,45 +233,34 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	function onCommandResult(event:OperationEvent) {
 		progress++;
 		dispatchProgressEvent();
-		
 		#if debug
 		Log.trace('Asynchronous command ${event.target} returned result. Executing next command.');
 		#end
-		
 		removeCommandListeners(cast(event.target, IOperation));
 		dispatchAfterCommandEvent(cast(event.target, ICommand));
-		
-		if(kind == CompositeCommandKind.SEQUENCE) {
-			executeNextCommand();
-		} else if(kind == CompositeCommandKind.PARALLEL) {
-			removeCommand(cast(event.target, IOperation));
-		}
+		if(kind == CompositeCommandKind.SEQUENCE) executeNextCommand();
+		else if(kind == CompositeCommandKind.PARALLEL) removeCommand(cast(event.target, IOperation));
 	}
 
 	function onCommandFault(event:OperationEvent) {
 		#if debug
 		Log.trace('Asynchronous command ${event.target} returned error.');
 		#end
-		
 		dispatchErrorEvent(event.error);
 		removeCommandListeners(cast event.target);
-		
 		if(kind == CompositeCommandKind.SEQUENCE) {
 			if (failOnFault) {
 				currentCommand = null;
 			} else {
 				executeNextCommand();
 			}
-		} else if(kind == CompositeCommandKind.PARALLEL) {
-			removeCommand(cast(event.target, IOperation));
-		}
+		} else if(kind == CompositeCommandKind.PARALLEL) removeCommand(cast(event.target, IOperation));
 	}
 
 	function dispatchAfterCommandEvent(command:ICommand) {
 		#if debug
 		if(command == null) throw "the command argument must not be null";
 		#end
-		
 		dispatchEvent(new CompositeCommandEvent(CompositeCommandEvent.AFTER_EXECUTE_COMMAND, command));
 	}
 
@@ -329,7 +268,6 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		#if debug
 		if(command == null) throw "the command argument must not be null";
 		#end
-		
 		dispatchEvent(new CompositeCommandEvent(CompositeCommandEvent.BEFORE_EXECUTE_COMMAND, command));
 	}
 }

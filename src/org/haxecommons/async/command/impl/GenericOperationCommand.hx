@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.command.impl;
-import flash.system.ApplicationDomain;
+import openfl.system.ApplicationDomain;
 import org.haxecommons.async.command.IAsyncCommand;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.impl.AbstractProgressOperation;
@@ -39,10 +39,7 @@ class GenericOperationCommand extends AbstractProgressOperation implements IAsyn
 	 */
 	public static function createNew(cls:Class<Dynamic>, ?constructorArgs:Array<Dynamic>):GenericOperationCommand {
 		var goc:GenericOperationCommand = new GenericOperationCommand(cls);
-		if (constructorArgs != null) {
-			goc.constructorArguments = constructorArgs;
-		}
-		
+		if(constructorArgs != null) goc.constructorArguments = constructorArgs;
 		return goc;
 	}
 	
@@ -73,7 +70,6 @@ class GenericOperationCommand extends AbstractProgressOperation implements IAsyn
 		#if debug
 		if(operationClass == null) throw "the operationClass argument must not be null";
 		#end
-		
 		this.operationClass = operationClass;
 		constructorArguments = constructorArgs;
 	}
@@ -87,11 +83,9 @@ class GenericOperationCommand extends AbstractProgressOperation implements IAsyn
 		_operation = Type.createInstance(operationClass, constructorArguments);
 		_operation.addCompleteListener(operationComplete);
 		_operation.addErrorListener(operationError);
-		
-		if (Std.is(_operation, IProgressOperation)) {
+		if(Std.is(_operation, IProgressOperation)) {
 			cast(_operation, IProgressOperation).addProgressListener(operationProgress);
 		}
-		
 		return null;
 	}
 	
@@ -125,10 +119,7 @@ class GenericOperationCommand extends AbstractProgressOperation implements IAsyn
 	 * Removes the complete and error listeners from the <code>IOperation</code>'s instance.
 	 */
 	function removeListeners(){
-		if (_operation == null) {
-			return;
-		}
-		
+		if(_operation == null) return;
 		_operation.removeCompleteListener(operationComplete);
 		_operation.removeErrorListener(operationError);
 		if (Std.is(_operation, IProgressOperation)) {

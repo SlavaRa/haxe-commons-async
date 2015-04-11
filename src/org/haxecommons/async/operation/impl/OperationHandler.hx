@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 package org.haxecommons.async.operation.impl;
-import flash.events.Event;
-import flash.events.EventDispatcher;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
 import haxe.ds.WeakMap.WeakMap;
 import org.hamcrest.Exception.MissingImplementationException;
 import org.haxecommons.async.operation.event.OperationEvent;
@@ -98,10 +98,10 @@ class OperationHandler extends EventDispatcher implements IOperationHandler {
 	
 	var _busy:Bool;
 	
-	function get_busy() return _busy;
+	inline function get_busy() return _busy;
 	
-	function set_busy(value:Bool) {
-		if (_busy != value) {
+	inline function set_busy(value:Bool) {
+		if(_busy != value) {
 			_busy = value;
 			dispatchEvent(new Event(BUSY_CHANGE_EVENT));
 		}
@@ -119,10 +119,7 @@ class OperationHandler extends EventDispatcher implements IOperationHandler {
 	 * @param errorMethod A <code>Function</code> that will be invoked using the <code>IOperation.error</code> as a parameter.
 	 */
 	public function handleOperation(?operation:IOperation, ?resultMethod:Dynamic -> Dynamic, ?resultTargetObject:Map<String, Dynamic>, ?resultPropertyName:String, ?errorMethod:Dynamic -> Void):Void {
-		if (operation == null) {
-			return;
-		}
-		
+		if(operation == null) return;
 		busy = true;
 		_operations.set(operation, new OperationHandlerData(resultPropertyName, resultTargetObject, resultMethod, errorMethod));
 		operation.addCompleteListener(operationCompleteListener);
@@ -137,7 +134,6 @@ class OperationHandler extends EventDispatcher implements IOperationHandler {
 		#if debug
 		if(operation == null) throw "the operation argument must not be null";
 		#end
-		
 		operation.removeCompleteListener(operationCompleteListener);
 		operation.removeErrorListener(operationErrorHandler);
 		_operations.remove(operation);
@@ -162,19 +158,14 @@ class OperationHandler extends EventDispatcher implements IOperationHandler {
 		if(event == null) throw "the event argument must not be null";
 		#end
 		busy = false;
-		
 		var data = _operations.get(event.operation);
 		cleanupUpOperation(event.operation);
-		
-		if (data == null || ((data.resultPropertyName == null) && (data.resultMethod == null))) {
-			return;
-		}
-		
-		if ((data.resultPropertyName != null) && (data.resultTargetObject != null) && (data.resultMethod == null)) {
+		if(data == null || (data.resultPropertyName == null && data.resultMethod == null)) return;
+		if(data.resultPropertyName != null && data.resultTargetObject != null && data.resultMethod == null) {
 			data.resultTargetObject[data.resultPropertyName] = event.operation.result;
-		} else if ((data.resultPropertyName == null) && (data.resultMethod != null)) {
+		} else if(data.resultPropertyName == null && data.resultMethod != null) {
 			data.resultMethod(event.operation.result);
-		} else if ((data.resultPropertyName != null) && (data.resultTargetObject != null) && (data.resultMethod != null)) {
+		} else if(data.resultPropertyName != null && data.resultTargetObject != null && data.resultMethod != null) {
 			data.resultTargetObject[data.resultPropertyName] = data.resultMethod(event.operation.result);
 		}
 	}
@@ -189,18 +180,10 @@ class OperationHandler extends EventDispatcher implements IOperationHandler {
 		if(event == null) throw "the event argument must not be null";
 		#end
 		busy = false;
-		
 		var data = _operations.get(event.operation);
 		cleanupUpOperation(event.operation);
-		
-		var errorMethod:Dynamic -> Void = _defaultErrorHandler;
-		if (data.errorMethod != null) {
-			errorMethod = data.errorMethod;
-		}
-		
-		if (errorMethod != null) {
-			errorMethod(event.operation.error);
-		}
+		var errorMethod = _defaultErrorHandler;
+		if(data.errorMethod != null) errorMethod = data.errorMethod;
+		if(errorMethod != null) errorMethod(event.operation.error);
 	}
-	
 }

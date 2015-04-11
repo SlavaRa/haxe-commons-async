@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ class TimeBasedOperationCompleteTrigger extends AbstractOperationCompleteTrigger
 		#if debug
 		Log.trace("Executing");
 		#end
-		
 		_timer = Timer.delay(timeoutDispatcher, _durationInMilliseconds);
 		return null;
 	}
@@ -40,11 +39,9 @@ class TimeBasedOperationCompleteTrigger extends AbstractOperationCompleteTrigger
 		#if debug
 		Log.trace("Disposing");
 		#end
-		
 		if (!isDisposed && _timer != null) {
 			_timer.stop();
 			_timer = null;
-			
 			#if debug
 			Log.trace("Cleared timeout");
 			#end
@@ -55,7 +52,6 @@ class TimeBasedOperationCompleteTrigger extends AbstractOperationCompleteTrigger
 		#if debug
 		Log.trace(_durationInMilliseconds + " ms elapsed. Dispatching complete event.");
 		#end
-		
 		dispatchCompleteEvent();
 	}
 }

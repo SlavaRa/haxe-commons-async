@@ -4,14 +4,13 @@ import massive.munit.async.AsyncFactory;
 import org.haxecommons.async.command.impl.GenericOperationCommand;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.impl.MockOperation;
-import org.haxecommons.async.test.AbstractTestWithMockRepository;
 
 /**
  * @author SlavaRa
  */
-class GenericOperationCommandTest extends AbstractTestWithMockRepository {
+class GenericOperationCommandTest {
 
-	public function new() super();
+	public function new() {}
 	
 	@Test
 	public function testConstructor() {
@@ -25,19 +24,14 @@ class GenericOperationCommandTest extends AbstractTestWithMockRepository {
 	}
 	
 	@AsyncTest
-	public function testExecute(asyncFactory:AsyncFactory) {
-		var handler:Void->Void = asyncFactory.createHandler(this, function() Assert.isFalse(false), 2000);
-		#if (neko && !display)
-		haxe.Timer.delay(handler, 1900).run();
-		#else
-		haxe.Timer.delay(handler, 1900);
+	public function testExecute(factory:AsyncFactory) {
+		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		#if ((neko && !display) || cpp)
+		t.run();
 		#end
-		
 		var result = [];
-		var completeListener:OperationEvent->Void = function(event:OperationEvent) Assert.areNotEqual(event.result, result);
 		var gc = new GenericOperationCommand(MockOperation, result);
-		gc.addCompleteListener(completeListener);
+		gc.addCompleteListener(function(event:OperationEvent) Assert.areNotEqual(result, event.result));
 		gc.execute();
 	}
-	
 }

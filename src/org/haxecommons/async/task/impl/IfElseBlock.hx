@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.task.impl;
-import flash.events.Event;
+import openfl.events.Event;
 import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.command.impl.GenericOperationCommand;
 import org.haxecommons.async.operation.event.OperationEvent;
@@ -42,9 +42,7 @@ class IfElseBlock extends AbstractOperation implements IIfElseBlock {
 		#if debug
 		if(conditionProvider == null) throw "the conditionProvider argument must not be null";
 		#end
-		
 		super();
-		
 		this.conditionProvider = conditionProvider;
 		_ifBlock = new Task();
 		_currentBlock = _ifBlock;
@@ -205,7 +203,6 @@ class IfElseBlock extends AbstractOperation implements IIfElseBlock {
 		if (asyncCommand == null) {
 			return;
 		}
-		
 		asyncCommand.addCompleteListener(onConditionalResult);
 		asyncCommand.addErrorListener(onConditionalFault);
 	}
@@ -214,7 +211,6 @@ class IfElseBlock extends AbstractOperation implements IIfElseBlock {
 		if (asyncCommand == null) {
 			return;
 		}
-		
 		asyncCommand.removeCompleteListener(onConditionalResult);
 		asyncCommand.removeErrorListener(onConditionalFault);
 	}
@@ -223,7 +219,6 @@ class IfElseBlock extends AbstractOperation implements IIfElseBlock {
 		if (asyncCommand == null) {
 			return;
 		}
-		
 		asyncCommand.addEventListener(TaskEvent.TASK_COMPLETE, onBlockComplete);
 		asyncCommand.addEventListener(TaskEvent.BEFORE_EXECUTE_COMMAND, redispatch);
 		asyncCommand.addEventListener(TaskEvent.AFTER_EXECUTE_COMMAND, redispatch);
@@ -236,7 +231,6 @@ class IfElseBlock extends AbstractOperation implements IIfElseBlock {
 		if (asyncCommand == null) {
 			return;
 		}
-		
 		asyncCommand.removeEventListener(TaskEvent.TASK_COMPLETE, onBlockComplete);
 		asyncCommand.removeEventListener(TaskEvent.BEFORE_EXECUTE_COMMAND, redispatch);
 		asyncCommand.removeEventListener(TaskEvent.AFTER_EXECUTE_COMMAND, redispatch);

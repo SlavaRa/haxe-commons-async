@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,5 +22,4 @@ import org.haxecommons.async.operation.IOperation;
  * <code>OperationEvent.ERROR</code> event before calling <code>execute()</code> and handle the events.
  * @author Christophe Herreman
  */
-interface IAsyncCommand extends ICommand extends IOperation {
-}
+interface IAsyncCommand extends ICommand extends IOperation {}

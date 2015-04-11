@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,24 +38,18 @@ class MockOperation extends AbstractOperation {
 		_result = resultData;
 		_delay = useRandomDelay ? Std.int(Math.random() * delay) : delay;
 		_func = func;
-		
-		if (returnError) {
+		if(returnError) {
 			var timer = haxe.Timer.delay(function() {
 				error = "error occurred";
-				if (_func != null) {
-					_func();
-				}
+				if(_func != null) _func();
 				dispatchErrorEvent();
 			}, _delay);
 		} else {
 			var timer = haxe.Timer.delay(function() {
 				result = _result;
-				if (_func != null) {
-					_func();
-				}
+				if(_func != null)_func();
 				dispatchCompleteEvent();
 			}, _delay);
 		}
-		
 	}
 }

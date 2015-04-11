@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package org.haxecommons.async.task;
-import flash.events.IEventDispatcher;
+import openfl.events.IEventDispatcher;
 
 /**
  * Describes an object that can influence the flow of control within a task.

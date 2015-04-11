@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,16 +57,9 @@ class MockAsyncCommand extends AbstractOperation implements ICommand {
 	 * @return The result of the specified <code>Function</code>, or <code>void</code> if its <code>null</code>.
 	 */
 	public function execute():Dynamic {
-		if (_func != null) {
-			result = _func();
-		}
-		
-		if (_fail) {
-			Timer.delay(function() dispatchErrorEvent(), _timeout);
-		} else {
-			Timer.delay(function() dispatchCompleteEvent(), _timeout);
-		}
-		
+		if(_func != null) result = _func();
+		if(_fail) Timer.delay(function() dispatchErrorEvent(), _timeout);
+		else Timer.delay(function() dispatchCompleteEvent(), _timeout);
 		return null;
 	}
 }

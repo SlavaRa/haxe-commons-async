@@ -7,15 +7,12 @@ import org.haxecommons.async.task.command.FunctionCommand;
  */
 class FunctionCommandTest {
 
-	public function new() {
-	}
+	public function new() {}
 	
 	@Test
 	public function testExecute() {
-		var resultObject:Dynamic = {};
-		var testFunc:Void->Dynamic = function():Dynamic return resultObject;
-		var fc = new FunctionCommand(testFunc);
-		Assert.areEqual(resultObject, fc.execute());
+		var result:Dynamic = {};
+		var command = new FunctionCommand(function() return result);
+		Assert.areEqual(result, command.execute());
 	}
-	
 }

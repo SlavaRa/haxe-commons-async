@@ -203,3 +203,4 @@ report/test-runner/js_test.js
 report/test/summary/js/summary.txt
 bin/windows/neko/bin/manifest
 bin/windows/neko/haxe/DefaultAssetLibrary.hx
+bin/

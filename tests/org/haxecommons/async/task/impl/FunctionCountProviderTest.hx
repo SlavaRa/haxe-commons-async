@@ -7,20 +7,13 @@ import org.haxecommons.async.task.impl.FunctionCountProvider;
  */
 class FunctionCountProviderTest {
 
-	public function new() {
-	}
+	public function new() {}
 	
-	var _called:Bool;
-
 	@Test
 	public function testGetResult() {
-		var fcp = new FunctionCountProvider(testResult);
+		var called = false;
+		var fcp = new FunctionCountProvider(function() {called = true; return 10;});
 		Assert.areEqual(10, fcp.getCount());
-		Assert.isTrue(_called);
-	}
-
-	function testResult():Int {
-		_called = true;
-		return 10;
+		Assert.isTrue(called);
 	}
 }

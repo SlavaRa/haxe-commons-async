@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2011 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,11 @@ class FunctionCountProvider extends CountProvider {
 		#if debug
 		if(func == null) throw "the func argument must not be null";
 		#end
-		
 		super();
-		
 		_func = func;
 	}
 	
 	var _func:Void -> Int;
 
 	public override function getCount():Int return _func();
-	
 }

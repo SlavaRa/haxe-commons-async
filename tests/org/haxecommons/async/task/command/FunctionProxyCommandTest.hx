@@ -8,16 +8,14 @@ import org.haxecommons.async.task.command.FunctionProxyCommand;
  */
 class FunctionProxyCommandTest {
 
-	public function new() {
-	}
+	public function new() {}
 	
 	@Test
 	public function testExecute() {
-		var resultObject:Dynamic = {};
-		var fc:ICommand = new FunctionProxyCommand(this, "testFunc", [resultObject]);
-		Assert.areEqual(resultObject, fc.execute());
+		var result:Dynamic = {};
+		var command:ICommand = new FunctionProxyCommand(this, "testFunc", [result]);
+		Assert.areEqual(result, command.execute());
 	}
 
 	public function testFunc(arg:Dynamic):Dynamic return arg;
-	
 }
