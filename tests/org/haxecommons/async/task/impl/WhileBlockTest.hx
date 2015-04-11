@@ -6,14 +6,13 @@ import org.haxecommons.async.operation.impl.MockOperation;
 import org.haxecommons.async.task.event.TaskEvent;
 import org.haxecommons.async.task.impl.FunctionConditionProvider;
 import org.haxecommons.async.task.impl.WhileBlock;
-import org.haxecommons.async.test.AbstractTestWithMockRepository;
 
 /**
  * @author SlavaRa
  */
-class WhileBlockTest extends AbstractTestWithMockRepository {
+class WhileBlockTest {
 
-	public function new() super();
+	public function new() {}
 
 	@Test
 	public function testExecute() {

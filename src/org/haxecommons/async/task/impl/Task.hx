@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,10 +99,8 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		#if debug
 		if(item == null) throw "the item argument must not be null";
 		#end
-		
 		var command = Std.is(item, ICommand) ? cast(item, ICommand) : GenericOperationCommand.createNew(item, constructorArgs);
 		var result = addCommand(command, CompositeCommandKind.SEQUENCE);
-		
 		return result != null ? result : this;
 	}
 	
@@ -113,7 +111,6 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		#if debug
 		if(item == null) throw "the item argument must not be null";
 		#end
-		
 		var command = Std.is(item, ICommand) ? cast(item, ICommand) : GenericOperationCommand.createNew(item, constructorArgs);
 		var result = addCommand(command, CompositeCommandKind.PARALLEL);
 		return result != null ? result : this;
@@ -124,14 +121,12 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	 */
 	public function if_(?conditionProvider:IConditionProvider, ?ifElseBlock:IIfElseBlock):IIfElseBlock {
 		ifElseBlock = (ifElseBlock != null) ? ifElseBlock : new IfElseBlock(conditionProvider);
-		
 		var cmd = commandList[commandList.length - 1];
 		if (Std.is(cmd, ICompositeCommand) || (Std.is(cmd, ITask) && (cast(cmd, ITask).isClosed))) {
 			addToCommandList(ifElseBlock);
 		} else {
 			addCommand(ifElseBlock, CompositeCommandKind.SEQUENCE);
 		}
-		
 		return ifElseBlock;
 	}
 	
@@ -155,13 +150,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	 */
 	public function while_(?conditionProvider:IConditionProvider, ?whileBlock:IWhileBlock):IWhileBlock {
 		whileBlock = whileBlock != null ? whileBlock : new WhileBlock(conditionProvider);
-		
 		var cmd:ICommand = (commandList.length > 0) ? commandList[commandList.length - 1] : null;
 		if (Std.is(cmd, ICompositeCommand) || (Std.is(cmd, ITask) && (cast(cmd, ITask).isClosed))) {
 			addToCommandList(whileBlock);
-		} else {
-			addCommand(whileBlock, CompositeCommandKind.SEQUENCE);
-		}
+		} else addCommand(whileBlock, CompositeCommandKind.SEQUENCE);
 		return whileBlock;
 	}
 	
@@ -171,13 +163,10 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	public function for_(count:Int, ?countProvider:ICountProvider, ?forBlock:IForBlock):IForBlock {
 		countProvider = ((countProvider == null) && (forBlock == null)) ? new CountProvider(count) : countProvider;
 		forBlock = (forBlock != null) ? forBlock : new ForBlock(countProvider);
-		
 		var cmd:ICommand = (commandList.length > 0) ? commandList[commandList.length - 1] : null;
-		if (Std.is(cmd, ICompositeCommand) || (Std.is(cmd, Task) && (cast(cmd, ITask).isClosed))) {
+		if(Std.is(cmd, ICompositeCommand) || (Std.is(cmd, Task) && (cast(cmd, ITask).isClosed))) {
 			addToCommandList(forBlock);
-		} else {
-			addCommand(forBlock, CompositeCommandKind.SEQUENCE);
-		}
+		} else addCommand(forBlock, CompositeCommandKind.SEQUENCE);
 		return forBlock;
 	}
 	
@@ -185,13 +174,11 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	 * @inheritDoc
 	 */
 	public function end():ITask {
-		if (commandList.length > 0) {
+		if(commandList.length > 0) {
 			var command:ICommand = commandList[commandList.length - 1];
 			if(Std.is(command, ITask)) {
 				var task:ITask = cast(command, ITask);
-				if(!task.isClosed) {
-					return task.end();
-				}
+				if(!task.isClosed) return task.end();
 			}
 		}
 		return parent != null ? parent : this;
@@ -210,7 +197,6 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	 */
 	public function pause(duration:Int, ?pauseCommand:ICommand):ITask {
 		pauseCommand = pauseCommand == null ? new PauseCommand(duration) : pauseCommand;
-		
 		var result = addCommand(pauseCommand, CompositeCommandKind.SEQUENCE);
 		return result != null ? result : this;
 	}
@@ -273,7 +259,6 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	function addToCommandList(command:ICommand) {
 		commandList[commandList.length] = command;
 		currentCommand = command;
-		
 		if (Std.is(command, ITask)) {
 			cast(command, ITask).parent = this;
 		}
@@ -299,14 +284,11 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	 */
 	function addCommand(command:ICommand, kind:CompositeCommandKind):ITask {
 		var compositeCommand:ICompositeCommand = null;
-		
 		if (currentCommand != null) {
 			var task:ITask = null;
-			
 			if(Std.is(currentCommand, ITask)) {
 				task = cast(currentCommand, ITask);
 			}
-			
 			if ((task != null) && !task.isClosed) {
 				task.next(command);
 				return task;
@@ -314,22 +296,18 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 				if(Std.is(currentCommand, ICompositeCommand)) {
 					compositeCommand = cast(currentCommand, ICompositeCommand);
 				}
-				
 				if ((compositeCommand != null) && (compositeCommand.kind != kind)) {
 					compositeCommand = null;
 				} 
-				
 				if (compositeCommand == null) {
 					compositeCommand = addTaskCommand(kind);
 				}
-				
 				compositeCommand.addCommand(command);
 			}
 		} else {
 			compositeCommand = addTaskCommand(kind);
 			compositeCommand.addCommand(command);
 		}
-		
 		return null;
 	}
 
@@ -338,20 +316,16 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 		if(commandList != null && commandList.length > 0) {
 			command = commandList.shift();
 		}
-		
 		if (command != null) {
 			finishedCommandList[finishedCommandList.length] = command;
 		}
-		
 		executeCommand(command);
 	}
 	
 	function executeCommand(command:ICommand) {
 		currentCommand = command;
-		
 		if (command != null) {
 			var async:IOperation = null;
-			
 			if(Std.is(command, IOperation)) {
 				async = cast(command, IOperation);
 				addCommandListeners(async);
@@ -380,14 +354,13 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 					cast(cmd, ITask).reset(true);
 				}
 			}
-			
 			commandList = finishedCommandList.concat(commandList);
 		}
 		return null;
 	}
 
 	function onCommandResult(event:OperationEvent) {
-		if (event.target == currentCommand) {
+		if(event.target == currentCommand) {
 			removeCommandListeners(cast event.target);
 			dispatchTaskEvent(TaskEvent.AFTER_EXECUTE_COMMAND, cast event.target);
 			executeNextCommand();
@@ -395,44 +368,30 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	}
 
 	function onCommandFault(event:OperationEvent) {
-		if (event.target == currentCommand) {
+		if(event.target == currentCommand) {
 			removeCommandListeners(cast event.target);
-			
 			var command:ICommand = null;
-			
-			if(Std.is(event.target, ICommand)) {
-				command = cast(event.target, ICompositeCommand);
-			}
-			
+			if(Std.is(event.target, ICommand)) command = cast(event.target, ICompositeCommand);
 			dispatchErrorEvent(command);
 			dispatchTaskEvent(TaskEvent.TASK_ERROR, command);
-			
-			if (!failOnFault) {
-				executeNextCommand();
-			} else {
-				currentCommand = null;
-			}
+			if(!failOnFault) executeNextCommand();
+			else currentCommand = null;
 		}
 	}
 
 	function addCommandListeners(asyncCommand:IOperation) {
-		if (asyncCommand == null) {
-			return;
-		}
-		
+		if(asyncCommand == null) return;
 		asyncCommand.addCompleteListener(onCommandResult);
 		asyncCommand.addErrorListener(onCommandFault);
 		asyncCommand.addEventListener(TaskFlowControlEvent.BREAK, TaskFlowControlEvent_handler);
 		asyncCommand.addEventListener(TaskFlowControlEvent.CONTINUE, TaskFlowControlEvent_handler);
 		asyncCommand.addEventListener(TaskFlowControlEvent.EXIT, exit_handler);
-		
-		if (Std.is(asyncCommand, CompositeCommand)) {
+		if(Std.is(asyncCommand, CompositeCommand)) {
 			var compositeCommand:CompositeCommand = cast(asyncCommand, CompositeCommand);
 			compositeCommand.addEventListener(CompositeCommandEvent.BEFORE_EXECUTE_COMMAND, redispatchCompositeCommand);
 			compositeCommand.addEventListener(CompositeCommandEvent.AFTER_EXECUTE_COMMAND, redispatchCompositeCommand);
 		}
-		
-		if (Std.is(asyncCommand, ITask)) {
+		if(Std.is(asyncCommand, ITask)) {
 			var task:ITask = cast(asyncCommand, ITask);
 			task.addEventListener(TaskEvent.BEFORE_EXECUTE_COMMAND, redispatchTaskEvent);
 			task.addEventListener(TaskEvent.AFTER_EXECUTE_COMMAND, redispatchTaskEvent);
@@ -440,22 +399,18 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	}
 
 	function removeCommandListeners(asyncCommand:IOperation) {
-		if (asyncCommand == null) {
-			return;
-		}
+		if(asyncCommand == null) return;
 		asyncCommand.removeCompleteListener(onCommandResult);
 		asyncCommand.removeErrorListener(onCommandFault);
 		asyncCommand.removeEventListener(TaskFlowControlEvent.BREAK, TaskFlowControlEvent_handler);
 		asyncCommand.removeEventListener(TaskFlowControlEvent.CONTINUE, TaskFlowControlEvent_handler);
 		asyncCommand.removeEventListener(TaskFlowControlEvent.EXIT, exit_handler);
-		
-		if (Std.is(asyncCommand, CompositeCommand)) {
+		if(Std.is(asyncCommand, CompositeCommand)) {
 			var compositeCommand:CompositeCommand = cast(asyncCommand, CompositeCommand);
 			compositeCommand.removeEventListener(CompositeCommandEvent.BEFORE_EXECUTE_COMMAND, redispatchCompositeCommand);
 			compositeCommand.removeEventListener(CompositeCommandEvent.AFTER_EXECUTE_COMMAND, redispatchCompositeCommand);
 		}
-		
-		if (Std.is(asyncCommand, ITask)) {
+		if(Std.is(asyncCommand, ITask)) {
 			var task:ITask = cast(asyncCommand, ITask);
 			task.removeEventListener(TaskEvent.BEFORE_EXECUTE_COMMAND, redispatchTaskEvent);
 			task.removeEventListener(TaskEvent.AFTER_EXECUTE_COMMAND, redispatchTaskEvent);
@@ -483,5 +438,4 @@ class Task extends AbstractOperation implements ITask/* implements IDisposable*/
 	function dispatchTaskEvent(eventType:String, ?command:ICommand) dispatchEvent(new TaskEvent(eventType, this, command));
 	
 	function setIsClosed(value:Bool) isClosed = value;
-	
 }

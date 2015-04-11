@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ class AbstractParallelOperationCompleteTrigger extends AbstractCompositeOperatio
 			#if debug
 			Log.trace("Disposing");
 			#end
-			
 			removeTriggerListeners();
 			super.dispose();
 		}
@@ -40,16 +39,13 @@ class AbstractParallelOperationCompleteTrigger extends AbstractCompositeOperatio
 
 	function onTriggerCompleteHandler(event:OperationEvent) throw new IllegalOperationError();
 
-	function addTriggerListeners() for (it in triggers) it.addCompleteListener(onTriggerCompleteHandler);
+	function addTriggerListeners() for(it in triggers) it.addCompleteListener(onTriggerCompleteHandler);
 
 	function removeTriggerListeners() {
 		#if debug
 		Log.trace("Removing trigger listeners");
 		#end
-		
-		for(it in triggers) {
-			it.removeCompleteListener(onTriggerCompleteHandler);
-		}
+		for(it in triggers) it.removeCompleteListener(onTriggerCompleteHandler);
 	}
 
 	function startTriggers() for(it in triggers) it.execute();

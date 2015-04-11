@@ -4,14 +4,13 @@ import massive.munit.async.AsyncFactory;
 import org.haxecommons.async.command.impl.GenericOperationCommand;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.impl.MockOperation;
-import org.haxecommons.async.test.AbstractTestWithMockRepository;
 
 /**
  * @author SlavaRa
  */
-class GenericOperationCommandTest extends AbstractTestWithMockRepository {
+class GenericOperationCommandTest {
 
-	public function new() super();
+	public function new() {}
 	
 	@Test
 	public function testConstructor() {
@@ -35,5 +34,4 @@ class GenericOperationCommandTest extends AbstractTestWithMockRepository {
 		gc.addCompleteListener(function(event:OperationEvent) Assert.areNotEqual(result, event.result));
 		gc.execute();
 	}
-	
 }

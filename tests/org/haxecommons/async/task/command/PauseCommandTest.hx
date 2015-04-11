@@ -20,11 +20,10 @@ class PauseCommandTest {
 		#end
 		var command = new PauseCommand(500);
 		var timer = Timer.delay(function() Assert.fail(""), 1000);
-		var handleComplete:OperationEvent->Void = function(event:OperationEvent) {
+		command.addCompleteListener(function(event:OperationEvent) {
 			Assert.areEqual(command, event.target);
 			timer.stop();
-		};
-		command.addCompleteListener(handleComplete);
+		});
 		command.execute();
 	}
 }

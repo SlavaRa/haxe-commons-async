@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,15 +82,13 @@ class OperationEvent extends Event {
 	 * @return The result of the <code>IOperation</code> that generated the current <code>OperationEvent</code>.
 	 */
 	public var result(get , null):Dynamic;
-	
-	function get_result():Dynamic return operation != null ? operation.result : null;
+	inline function get_result():Dynamic return operation != null ? operation.result : null;
 	
 	/**
 	 * @return The error of the <code>IOperation</code> that generated the current <code>OperationEvent</code>.
 	 */
 	public var error(get, null):Dynamic;
-
-	function get_error():Dynamic  return operation != null ? operation.error : null;
+	inline function get_error():Dynamic  return operation != null ? operation.error : null;
 	
 	/**
 	 * @return An exact copy of the current <code>OperationEvent</code>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,6 @@ class NetConnectionService implements IService {
 		#if debug
 		if(netConnection == null) throw "the netConnection argument must not be null";
 		#end
-		
 		return new NetConnectionOperation(netConnection, methodName, parameters);
 	}
 }

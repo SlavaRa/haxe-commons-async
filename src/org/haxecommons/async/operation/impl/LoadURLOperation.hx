@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,8 @@ class LoadURLOperation extends AbstractProgressOperation {
 		#if debug
 		if(url == null || url.length == 0) throw "url argument must not be null or empty";
 		#end
-		
 		super();
-		
-		if (dataFormat == null || dataFormat.length == 0) {
-			dataFormat = URLLoaderDataFormat.TEXT;
-		}
-		
+		if(dataFormat == null || dataFormat.length == 0) dataFormat = URLLoaderDataFormat.TEXT;
 		createLoader(url, dataFormat, request);
 	}
 
@@ -64,14 +59,12 @@ class LoadURLOperation extends AbstractProgressOperation {
 	 */
 	function createLoader(url:String, dataFormat:String, request:URLRequest) {
 		this.url = url;
-		
 		_urlLoader = new URLLoader();
 		_urlLoader.dataFormat = dataFormat;
 		_urlLoader.addEventListener(Event.COMPLETE, urlLoaderCompleteHandler);
 		_urlLoader.addEventListener(ProgressEvent.PROGRESS, progressHandler);
 		_urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, urlLoaderErrorHandler);
 		_urlLoader.addEventListener(IOErrorEvent.IO_ERROR, urlLoaderErrorHandler);
-		
 		var request = (request == null) ? new URLRequest(url) : request;
 		_urlLoader.load(request);
 	}
@@ -91,10 +84,7 @@ class LoadURLOperation extends AbstractProgressOperation {
 	 * sets it to <code>null</code> afterwards.
 	 */
 	function removeEventListeners() {
-		if (_urlLoader == null) {
-			return;
-		}
-		
+		if (_urlLoader == null) return;
 		_urlLoader.removeEventListener(Event.COMPLETE, completeHandler);
 		_urlLoader.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
 		_urlLoader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, errorHandler);

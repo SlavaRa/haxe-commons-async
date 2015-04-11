@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,15 +43,11 @@ package org.haxecommons.async.task;
 	 * @throws openfl.errors.Error Error when the specified name cannot be converted to a valid <code>TaskFlowControlKind</code> instance.
 	 */
 	public static function fromName(name:String):TaskFlowControlKind {
-		switch (name.toLowerCase()) {
-			case "break":
-				return BREAK;
-			case "continue":
-				return CONTINUE;
-			case "exit":
-				return EXIT;
-			default:
-				throw "Unknown TaskFlowControlKind value: " + name;
+		switch(name.toLowerCase()) {
+			case "break": return BREAK;
+			case "continue": return CONTINUE;
+			case "exit": return EXIT;
+			default: throw "Unknown TaskFlowControlKind value: " + name;
 		}
 		return null;
 	}

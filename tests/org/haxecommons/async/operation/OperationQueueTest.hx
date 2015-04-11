@@ -4,14 +4,13 @@ import massive.munit.async.AsyncFactory;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.impl.AbstractOperation;
 import org.haxecommons.async.operation.impl.OperationQueue;
-import org.haxecommons.async.test.AbstractTestWithMockRepository;
 
 /**
  * @author SlavaRa
  */
-class OperationQueueTest extends AbstractTestWithMockRepository {
+class OperationQueueTest {
 
-	public function new() super();
+	public function new() {}
 	
 	@AsyncTest
 	public function testQueue(factory:AsyncFactory) {

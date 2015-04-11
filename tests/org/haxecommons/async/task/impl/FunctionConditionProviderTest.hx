@@ -7,20 +7,13 @@ import org.haxecommons.async.task.impl.FunctionConditionProvider;
  */
 class FunctionConditionProviderTest {
 
-	public function new() {
-	}
+	public function new() {}
 	
-	private var _called:Bool;
-
 	@Test
 	public function testGetResult() {
-		var fcp = new FunctionConditionProvider(testResult);
+		var called = false;
+		var fcp = new FunctionConditionProvider(function() {called = true; return true; });
 		Assert.isTrue(fcp.getResult());
-		Assert.isTrue(_called);
-	}
-
-	function testResult():Bool {
-		_called = true;
-		return true;
+		Assert.isTrue(called);
 	}
 }

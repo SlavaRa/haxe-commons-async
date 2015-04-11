@@ -12,7 +12,7 @@ class FunctionCommandTest {
 	@Test
 	public function testExecute() {
 		var result:Dynamic = {};
-		var command = new FunctionCommand(function():Dynamic return result);
+		var command = new FunctionCommand(function() return result);
 		Assert.areEqual(result, command.execute());
 	}
 }

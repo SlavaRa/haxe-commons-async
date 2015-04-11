@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,7 @@ class LoadURLStreamOperation {
 		#if debug
 		if(url == null || url.length == 0) throw "url argument must not be null or empty";
 		#end
-		
 		super();
-		
 		init(url);
 	}
 
@@ -55,10 +53,8 @@ class LoadURLStreamOperation {
 		_urlStream.addEventListener(ProgressEvent.PROGRESS, progressHandler, false, 0, true);
 		_urlStream.addEventListener(SecurityErrorEvent.SECURITY_ERROR, urlStreamErrorHandler, false, 0, true);
 		_urlStream.addEventListener(IOErrorEvent.IO_ERROR, urlStreamErrorHandler, false, 0, true);
-		
 		setTimeout(load, 0, url);
 	}
-	
 	
 	function load(url:String) _urlStream.load(new URLRequest(url));
 
@@ -91,10 +87,7 @@ class LoadURLStreamOperation {
 	 * sets it to <code>null</code> afterwards.
 	 */
 	function removeEventListeners() {
-		if (_urlStream == null) {
-			return;
-		}
-		
+		if(_urlStream == null) return;
 		_urlStream.removeEventListener(Event.COMPLETE, completeHandler);
 		_urlStream.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
 		_urlStream.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, errorHandler);

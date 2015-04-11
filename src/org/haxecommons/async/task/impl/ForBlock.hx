@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,6 @@ class ForBlock extends AbstractTaskBlock implements IForBlock {
 			if (async.result == null) {
 				addCountListeners(async);
 			}
-			
 			if (Std.is(countProvider, ICommand)) {
 				cast(countProvider, ICommand).execute();
 			} else {
@@ -69,11 +68,9 @@ class ForBlock extends AbstractTaskBlock implements IForBlock {
 		if (command != null) {
 			if (doFlowControlCheck(command)) {
 				var async:IOperation = null;
-				
 				if (Std.is(command, IOperation)) {
 					async = cast(command, IOperation);
 				}
-				
 				addCommandListeners(async);
 				dispatchTaskEvent(TaskEvent.BEFORE_EXECUTE_COMMAND, command);
 				command.execute();
@@ -130,21 +127,14 @@ class ForBlock extends AbstractTaskBlock implements IForBlock {
 	}
 
 	function addCountListeners(?asyncCommand:IOperation) {
-		if (asyncCommand == null) {
-			return;
-		}
-		
+		if(asyncCommand == null) return;
 		asyncCommand.addCompleteListener(onCountResult);
 		asyncCommand.addErrorListener(onCountFault);
 	}
 
-	function removeCountListeners(asyncCommand:IOperation) {
-		if (asyncCommand == null) {
-			return;
-		}
-		
+	function removeCountListeners(?asyncCommand:IOperation) {
+		if(asyncCommand == null) return;
 		asyncCommand.removeCompleteListener(onCountResult);
 		asyncCommand.removeErrorListener(onCountFault);
 	}
-	
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,11 +49,9 @@ class NetConnectionOperation extends AbstractOperation {
 		if(netConnection == null) throw "the netConnection argument must not be null";
 		if(methodName == null || methodName.length == 0) "The method name must not be null or an empty string";
 		#end
-		
 		this.netConnection = netConnection;
 		this.methodName = methodName;
 		this.parameters = parameters;
-		
 		Timer.delay(invokeRemoteMethod, 0);
 	}
 

@@ -5,14 +5,13 @@ import org.haxecommons.async.command.impl.MockAsyncCommand;
 import org.haxecommons.async.operation.impl.MockOperation;
 import org.haxecommons.async.task.event.TaskEvent;
 import org.haxecommons.async.task.impl.ForBlock;
-import org.haxecommons.async.test.AbstractTestWithMockRepository;
 
 /**
  * @author SlavaRa
  */
-class ForBlockTest extends AbstractTestWithMockRepository {
+class ForBlockTest {
 
-	public function new() super();
+	public function new() {}
 
 	@Test
 	public function testExecute() {

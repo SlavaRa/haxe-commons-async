@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2015 the original author or authors.
+ * Copyright 2007 - 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 * @inheritDoc
 	 */
 	public var numCommands(get, null):Int;
-	function get_numCommands() return commands.length;
+	inline function get_numCommands() return commands.length;
 	
 	/**
 	 * The <code>ICommand</code> that is currently being executed.
@@ -193,13 +193,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		#if debug
 		if(asyncCommand == null) throw "the asyncCommand argument must not be null";
 		#end
-		if(commands == null || !Std.is(asyncCommand, ICommand)) {
-			return;
-		}
+		if(commands == null || !Std.is(asyncCommand, ICommand)) return;
 		commands.remove(cast(asyncCommand, ICommand));
-		if(commands.length == 0) {
-			dispatchCompleteEvent();
-		}
+		if(commands.length == 0) dispatchCompleteEvent();
 	}
 
 	function executeCommandsInParallel() {
@@ -211,22 +207,16 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 			}
 			dispatchBeforeCommandEvent(command);
 			command.execute();
-			if(!Std.is(command, IOperation)) {
-				dispatchAfterCommandEvent(command);
-			}
+			if(!Std.is(command, IOperation)) dispatchAfterCommandEvent(command);
 		}
-		if(!containsOperations) {
-			dispatchCompleteEvent();
-		}
+		if(!containsOperations) dispatchCompleteEvent();
 	}
 
 	/**
 	 * Adds the <code>onCommandResult</code> and <code>onCommandFault</code> event handlers to the specified <code>IAsyncCommand</code> instance.
 	 */
 	function addCommandListeners(?asyncCommand:IOperation) {
-		if(asyncCommand == null) {
-			return;
-		}
+		if(asyncCommand == null) return;
 		asyncCommand.addCompleteListener(onCommandResult);
 		asyncCommand.addErrorListener(onCommandFault);
 	}
@@ -235,9 +225,7 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
      * Removes the <code>onCommandResult</code> and <code>onCommandFault</code> event handlers from the specified <code>IAsyncCommand</code> instance.
      */
 	function removeCommandListeners(?asyncCommand:IOperation) {
-		if(asyncCommand == null) {
-			return;
-		}
+		if(asyncCommand == null) return;
 		asyncCommand.removeCompleteListener(onCommandResult);
 		asyncCommand.removeErrorListener(onCommandFault);
 	}
@@ -250,11 +238,8 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		#end
 		removeCommandListeners(cast(event.target, IOperation));
 		dispatchAfterCommandEvent(cast(event.target, ICommand));
-		if(kind == CompositeCommandKind.SEQUENCE) {
-			executeNextCommand();
-		} else if(kind == CompositeCommandKind.PARALLEL) {
-			removeCommand(cast(event.target, IOperation));
-		}
+		if(kind == CompositeCommandKind.SEQUENCE) executeNextCommand();
+		else if(kind == CompositeCommandKind.PARALLEL) removeCommand(cast(event.target, IOperation));
 	}
 
 	function onCommandFault(event:OperationEvent) {
@@ -269,9 +254,7 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 			} else {
 				executeNextCommand();
 			}
-		} else if(kind == CompositeCommandKind.PARALLEL) {
-			removeCommand(cast(event.target, IOperation));
-		}
+		} else if(kind == CompositeCommandKind.PARALLEL) removeCommand(cast(event.target, IOperation));
 	}
 
 	function dispatchAfterCommandEvent(command:ICommand) {

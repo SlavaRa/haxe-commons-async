@@ -5,14 +5,13 @@ import org.haxecommons.async.command.CompositeCommandKind;
 import org.haxecommons.async.command.impl.CompositeCommand;
 import org.haxecommons.async.command.impl.MockAsyncCommand;
 import org.haxecommons.async.operation.impl.MockOperation;
-import org.haxecommons.async.test.AbstractTestWithMockRepository;
 
 /**
  * @author SlavaRa
  */
-class CompositeCommandTest extends AbstractTestWithMockRepository {
+class CompositeCommandTest {
 
-	public function new() super();
+	public function new() {}
 	
 	@Test
 	public function testAddCommandAndOperation() {

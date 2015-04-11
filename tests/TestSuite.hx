@@ -1,6 +1,4 @@
 import massive.munit.TestSuite;
-
-import ExampleTest;
 import org.haxecommons.async.command.CompositeCommandKindTest;
 import org.haxecommons.async.command.CompositeCommandTest;
 import org.haxecommons.async.command.GenericOperationCommandTest;
@@ -29,8 +27,6 @@ class TestSuite extends massive.munit.TestSuite
 	public function new()
 	{
 		super();
-
-		add(ExampleTest);
 		add(org.haxecommons.async.command.CompositeCommandKindTest);
 		add(org.haxecommons.async.command.CompositeCommandTest);
 		add(org.haxecommons.async.command.GenericOperationCommandTest);
