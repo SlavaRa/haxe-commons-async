@@ -33,7 +33,7 @@ import org.haxecommons.async.operation.IOperationHandler;
  *
  *   public var products:Array;
  *
- *   public function MyPresentationModel(){
+ *   public function MyPresentationModel() {
  *     _operationHandler = new OperationHandler(this.errorHandler);
  *   }
  *
@@ -57,7 +57,7 @@ import org.haxecommons.async.operation.IOperationHandler;
  *
  *   public var products:ArrayCollection;
  *
- *   public function MyPresentationModel(){
+ *   public function MyPresentationModel() {
  *     _operationHandler = new OperationHandler(this.errorHandler);
  *   }
  *

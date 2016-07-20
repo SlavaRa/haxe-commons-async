@@ -16,13 +16,13 @@
 package org.haxecommons.async.command.impl;
 import haxe.Log;
 import org.haxecommons.async.command.CompositeCommandKind;
-import org.haxecommons.async.command.event.CommandEvent;
-import org.haxecommons.async.command.event.CompositeCommandEvent;
 import org.haxecommons.async.command.ICommand;
 import org.haxecommons.async.command.ICompositeCommand;
+import org.haxecommons.async.command.event.CommandEvent;
+import org.haxecommons.async.command.event.CompositeCommandEvent;
+import org.haxecommons.async.operation.IOperation;
 import org.haxecommons.async.operation.event.OperationEvent;
 import org.haxecommons.async.operation.impl.AbstractProgressOperation;
-import org.haxecommons.async.operation.IOperation;
 
 /**
  * Basic implementation of the <code>ICompositeCommand</code> that executes a list of <code>ICommand</code> instances
@@ -174,9 +174,8 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 * <code>executeCommand()</code> method.
 	 */
 	function executeNextCommand() {
-		var command = commands.shift();
 		var nextCommand = commands.shift();
-		if(Std.is(command, ICommand)) {
+		if(nextCommand != null) {
 			#if debug
 			Log.trace('Executing next command $nextCommand. Remaining number of commands: ${commands.length}.');
 			#end

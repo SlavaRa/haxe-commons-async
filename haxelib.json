@@ -1,0 +1,14 @@
+{
+	"name":"commons-async",
+	"license":"MIT",
+	"tags":["cross", "cpp", "flash", "html5", "js", "neko", "async", "commands"],
+	"description":"",
+	"contributors":["SlavaRa"],
+	"releasenote":"",
+	"classPath":"src",
+	"version":"1.0.1",
+	"url":"https://github.com/SlavaRa/haxe-commons-async",
+	"dependencies":{
+		"openfl":""
+	}
+}

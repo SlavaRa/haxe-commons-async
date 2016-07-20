@@ -60,7 +60,7 @@ class TaskCommand extends CompositeCommand implements IResetable {
 		_finishedCommands = [];
 	}
 
-	override function executeNextCommand(){
+	override function executeNextCommand() {
 		var nextCommand:ICommand = commands.shift();
 		if (nextCommand != null) {
 			_finishedCommands[_finishedCommands.length] = nextCommand;
@@ -107,7 +107,7 @@ class TaskCommand extends CompositeCommand implements IResetable {
 		super.removeCommandListeners(asyncCommand);
 	}
 
-	function onFlowControlHandler(event:TaskFlowControlEvent){
+	function onFlowControlHandler(event:TaskFlowControlEvent) {
 		_stopped = true;
 		dispatchEvent(event.clone());
 	}

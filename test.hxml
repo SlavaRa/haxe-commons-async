@@ -1,28 +1,16 @@
-## Flash-legacy
+## flash12
 -main TestMain
 -lib munit
 -lib hamcrest
 -lib openfl
+-lib lime
 -cp src
 -cp tests
 -swf-version 12
--D legacy
 -swf bin/test/as3_test.swf
 --next
 
-## Flash-v2
--main TestMain
--lib munit
--lib hamcrest
--lib openfl
--cp src
--cp tests
--swf-version 12
--D v2
--swf bin/test/as3_test.swf
---next
-
-## JavaScript-legacy
+## js
 #-main TestMain
 #-lib munit
 #-lib hamcrest
@@ -30,25 +18,11 @@
 #-lib openfl
 #-cp src
 #-cp tests
-#-D legacy
 #-js bin/test/js_test.js
 #--remap flash:openfl
 #--next
 
-## JavaScript-v2
-#-main TestMain
-#-lib munit
-#-lib hamcrest
-#-lib lime
-#-lib openfl
-#-cp src
-#-cp tests
-#-D v2
-#-js bin/test/js_test.js
-#--remap flash:openfl
-#--next
-
-## Neko-legacy
+## neko
 -main TestMain
 -lib munit
 -lib hamcrest
@@ -56,25 +30,11 @@
 -lib openfl
 -cp src
 -cp tests
--D legacy
 -neko bin/test/neko_test.n
 --remap flash:openfl
 --next
 
-## Neko-v2
--main TestMain
--lib munit
--lib hamcrest
--lib lime
--lib openfl
--cp src
--cp tests
--D v2
--neko bin/test/neko_test.n
---remap flash:openfl
---next
-
-## CPP-legacy
+## cpp
 -main TestMain
 -lib munit
 -lib hamcrest
@@ -83,20 +43,5 @@
 -cp src
 -cp tests
 #-D HXCPP_M64
--D legacy
--cpp bin/test/cpp_test
---remap flash:openfl
---next
-
-## CPP-v2
--main TestMain
--lib munit
--lib hamcrest
--lib lime
--lib openfl
--cp src
--cp tests
-#-D HXCPP_M64
--D v2
 -cpp bin/test/cpp_test
 --remap flash:openfl
