@@ -14,7 +14,7 @@ class PauseCommandTest {
 	
 	@AsyncTest
 	public function testExecute(factory:AsyncFactory) {
-		var t = Timer.delay(factory.createHandler(this, function(){}, 2000), 1900);
+		var t = Timer.delay(factory.createHandler(this, function() {}, 2000), 1900);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end

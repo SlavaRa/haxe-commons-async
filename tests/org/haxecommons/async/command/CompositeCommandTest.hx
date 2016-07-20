@@ -25,7 +25,7 @@ class CompositeCommandTest {
 	
 	@AsyncTest
 	public function testSequenceExecute(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 400), 300);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 400), 300);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -38,7 +38,7 @@ class CompositeCommandTest {
 	
 	@AsyncTest
 	public function testParallelExecute(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 600), 500);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 600), 500);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -51,20 +51,20 @@ class CompositeCommandTest {
 	
 	@AsyncTest
 	public function testFailOnFaultIsTrue(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 400), 300);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 400), 300);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
 		new CompositeCommand(CompositeCommandKind.SEQUENCE)
 			.setFailOnFault(true)
-			.addOperation(MockOperation, ["test1", 200, true, function(){}, false])
+			.addOperation(MockOperation, ["test1", 200, true, function() {}, false])
 			.addOperation(MockOperation, ["test2", 100, false, function() Assert.fail(""), false])
 			.execute();
 	}
 	
 	@AsyncTest
 	public function testFailOnFaultIsFalse(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 400), 300);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 400), 300);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end

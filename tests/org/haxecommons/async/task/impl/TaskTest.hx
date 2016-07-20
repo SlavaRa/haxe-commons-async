@@ -23,7 +23,7 @@ class TaskTest {
 
 	@AsyncTest
 	public function testAndAsync(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 200), 100);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -36,7 +36,7 @@ class TaskTest {
 
 	@AsyncTest
 	public function testAndMultipleAsync(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 6000), 5900);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 6000), 5900);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -67,7 +67,7 @@ class TaskTest {
 
 	@AsyncTest
 	public function testNextAsync(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 500), 400);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 500), 400);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -80,7 +80,7 @@ class TaskTest {
 
 	@AsyncTest
 	public function testNextMultipleAsync(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 6000), 5900);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 6000), 5900);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -114,7 +114,7 @@ class TaskTest {
 
 	@AsyncTest
 	public function testForLoopWithAsyncCommand(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 300), 200);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 300), 200);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -140,7 +140,7 @@ class TaskTest {
 
 	@AsyncTest
 	public function testWhileLoopWithAsync(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 2000), 1900);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 2000), 1900);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end

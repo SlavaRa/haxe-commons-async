@@ -15,7 +15,7 @@ import js.Lib;
  */
 class TestMain
 {
-	static function main(){	new TestMain(); }
+	static function main() new TestMain();
 
 	public function new()
 	{

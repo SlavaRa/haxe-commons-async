@@ -92,7 +92,7 @@ class GenericOperationCommand extends AbstractProgressOperation implements IAsyn
 	/**
 	 * Event handler for the specified <code>IOperation</code>'s <code>OperationEvent.COMPLETE</code> event.
 	 */
-	function operationComplete(event:OperationEvent){
+	function operationComplete(event:OperationEvent) {
 		removeListeners();
 		dispatchCompleteEvent(event.operation.result);
 	}
@@ -100,7 +100,7 @@ class GenericOperationCommand extends AbstractProgressOperation implements IAsyn
 	/**
 	 * Event handler for the specified <code>IOperation</code>'s <code>OperationEvent.ERROR</code> event.
 	 */
-	function operationError(event:OperationEvent){
+	function operationError(event:OperationEvent) {
 		removeListeners();
 		dispatchErrorEvent(event.operation.error);
 	}
@@ -118,7 +118,7 @@ class GenericOperationCommand extends AbstractProgressOperation implements IAsyn
 	/**
 	 * Removes the complete and error listeners from the <code>IOperation</code>'s instance.
 	 */
-	function removeListeners(){
+	function removeListeners() {
 		if(_operation == null) return;
 		_operation.removeCompleteListener(operationComplete);
 		_operation.removeErrorListener(operationError);

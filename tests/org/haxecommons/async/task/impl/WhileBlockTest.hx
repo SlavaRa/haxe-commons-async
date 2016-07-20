@@ -24,7 +24,7 @@ class WhileBlockTest {
 
 	@AsyncTest
 	public function testExecuteWithAsync(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 300), 200);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 300), 200);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end 

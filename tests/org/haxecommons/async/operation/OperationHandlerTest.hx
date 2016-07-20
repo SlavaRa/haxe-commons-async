@@ -14,7 +14,7 @@ class OperationHandlerTest {
 	
 	@AsyncTest
 	public function testHandleOperationWithResultMethod(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 200), 100);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -27,7 +27,7 @@ class OperationHandlerTest {
 	
 	@AsyncTest
 	public function testHandleOperationWithObjectProperty(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 200), 100);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -43,7 +43,7 @@ class OperationHandlerTest {
 	
 	@AsyncTest
 	public function testHandleOperationWithObjectPropertyAndResultMethod(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 200), 100);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
@@ -64,7 +64,7 @@ class OperationHandlerTest {
 	
 	@AsyncTest
 	public function testHandleOperationWithNothing(factory:AsyncFactory) {
-		var t = haxe.Timer.delay(factory.createHandler(this, function(){}, 200), 100);
+		var t = haxe.Timer.delay(factory.createHandler(this, function() {}, 200), 100);
 		#if ((neko && !display) || cpp)
 		t.run();
 		#end
