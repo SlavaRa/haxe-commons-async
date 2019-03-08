@@ -110,6 +110,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 * @inheritDoc
 	 */
 	public function addCommandAt(command:ICommand, index:Int):ICompositeCommand {
+		#if debug
+		if(command == null) throw "the command argument must not be null.";
+		#end
 		if(index < commands.length) {
 			commands.insert(index, command);
 			total++;
@@ -148,7 +151,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		Log.trace("Executing command: " + command);
 		#end
 		currentCommand = command;
-		addCommandListeners(cast(command, IOperation));
+		if(Std.is(command, IOperation)) {
+			addCommandListeners(cast(command, IOperation));
+		}
 		dispatchEvent(new CommandEvent(CommandEvent.EXECUTE, command));
 		dispatchBeforeCommandEvent(command);
 		command.execute();
@@ -236,7 +241,9 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 		Log.trace('Asynchronous command ${event.target} returned result. Executing next command.');
 		#end
 		removeCommandListeners(cast(event.target, IOperation));
-		dispatchAfterCommandEvent(cast(event.target, ICommand));
+		if(Std.is(event.target, ICommand)) {
+			dispatchAfterCommandEvent(cast(event.target, ICommand));
+		}
 		if(kind == CompositeCommandKind.SEQUENCE) executeNextCommand();
 		else if(kind == CompositeCommandKind.PARALLEL) removeCommand(cast(event.target, IOperation));
 	}
