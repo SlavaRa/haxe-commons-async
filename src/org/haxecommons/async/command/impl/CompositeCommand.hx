@@ -204,19 +204,20 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 
 	function executeCommandsInParallel() {
 		var containsOperations = false;
+		var operations:Array<ICommand> = []; 
 		for(command in commands) {
 			if(Std.is(command, IOperation)) {
-				containsOperations = true;
+				operations[operations.length] = command;
 				addCommandListeners(cast(command, IOperation));
 			}
 			dispatchBeforeCommandEvent(command);
 			command.execute();
 			if(!Std.is(command, IOperation)) {
 				dispatchAfterCommandEvent(command);
-				commands.remove(command);
 			}
 		}
-		if(!containsOperations || commands.length == 0) dispatchCompleteEvent();
+		commands = operations;
+		if(commands.length == 0) dispatchCompleteEvent();
 	}
 
 	/**
