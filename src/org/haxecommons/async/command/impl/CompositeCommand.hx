@@ -211,9 +211,12 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 			}
 			dispatchBeforeCommandEvent(command);
 			command.execute();
-			if(!Std.is(command, IOperation)) dispatchAfterCommandEvent(command);
+			if(!Std.is(command, IOperation)) {
+				dispatchAfterCommandEvent(command);
+				commands.remove(command);
+			}
 		}
-		if(!containsOperations) dispatchCompleteEvent();
+		if(!containsOperations || commands.length == 0) dispatchCompleteEvent();
 	}
 
 	/**
