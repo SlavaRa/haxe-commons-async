@@ -73,7 +73,7 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	 * @inheritDoc
 	 */
 	public function execute():Dynamic {
-		if(commands != null) {
+		if(commands.length > 0) {
 			if(kind == CompositeCommandKind.SEQUENCE) {
 				#if debug
 				Log.trace('Executing composite command $this in sequence.');
@@ -203,20 +203,20 @@ class CompositeCommand extends AbstractProgressOperation implements ICompositeCo
 	}
 
 	function executeCommandsInParallel() {
-		var operations:Array<ICommand> = []; 
-		for(command in commands) {
+		var commandsToExecute:Array<ICommand> = commands.concat([]); 
+		for(command in commandsToExecute) {
 			if(Std.is(command, IOperation)) {
-				operations[operations.length] = command;
 				addCommandListeners(cast(command, IOperation));
 			}
 			dispatchBeforeCommandEvent(command);
 			command.execute();
 			if(!Std.is(command, IOperation)) {
 				dispatchAfterCommandEvent(command);
+
+				commands.remove(command);
+				if(commands.length == 0) dispatchCompleteEvent();
 			}
 		}
-		commands = operations;
-		if(commands.length == 0) dispatchCompleteEvent();
 	}
 
 	/**
